@@ -1,6 +1,3 @@
 <?php
-$base_url = 'http://localhost/php/crud';
-$host = 'localhost';
-$user = 'root';
-$dbname = 'aceem';
-$password = '';
+$base_url = 'http://localhost/aceem_php';
+$title = "Aceem";
