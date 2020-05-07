@@ -1,5 +1,5 @@
 <?php
-  include '../../controller/eleves.php';
+  include '../../controller/parametrages.php';
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
@@ -8,8 +8,9 @@
   <div class="container-fluid">
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
-          <button class="btn btn-danger">Enregister</button>
+        <div class="col-md-2 flex content-space">
+          <button class="btn btn-danger">Enregister</button><span>ou</span> 
+          <a href="<?=$base_url?>/pages/parametrages"> Annuler</a>
         </div>
       </div>
       <br>

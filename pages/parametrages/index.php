@@ -1,5 +1,5 @@
 <?php
-  include '../../controller/eleves.php';
+  include '../../controller/parametrages.php';
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
@@ -11,7 +11,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <a href="<?=$base_url?>/pages/eleves/create.php">
+              <a href="<?=$base_url?>/pages/parametrages/create.php">
                 <button class="btn btn-danger">Créer</button>
               </a>
             </div>

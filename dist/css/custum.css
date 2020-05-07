@@ -2,3 +2,32 @@
 	background-color: #fbfbfb;
 	padding: 15px;
 }
+
+.flex {
+	display: flex;
+}
+
+.content-space {
+	justify-content: space-between;
+}
+
+.form-control-perso {
+	border-bottom-width: 0.13em;
+	border-bottom-color: #dfdfdf;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-radius: 0px;
+	background: #fdfdfd;
+	transition: 0.4s;
+}
+
+.form-group label {
+	font-weight: 500 !important;
+}
+
+.form-control-perso:focus {
+	width: 100%;
+	transition: 0.4s;
+	left: 0;
+}
