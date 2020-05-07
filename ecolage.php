@@ -33,7 +33,7 @@
                         <label for="date_search">Recherche par Date :</label>
                     </div>
                     <div class="col-md-5">
-                        <input type="Date" id="date_search" class="form-control">
+                        <input type="text" id="date_search" class="form-control">
                     </div>
                 </div>
             </div>
