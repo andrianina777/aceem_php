@@ -41,13 +41,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="<?=$base_url?>/pages/utilisateurs" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Utilisateurs</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="<?=$base_url?>/pages/groupes" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Groupes</p>
                 </a>

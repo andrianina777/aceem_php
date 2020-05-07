@@ -12,7 +12,7 @@
               <button class="btn btn-danger">Enregister</button>
             </div>
           </div>
-
+        </div>
     </div>
   </div>
 <?php require_once '../../layout/footer.php'; ?>
