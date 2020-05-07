@@ -26,4 +26,54 @@ class database
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		return $stmt->fetchAll();
 	}
+
+	function insert($table_name, $data) {
+		$cols = [];
+		$values = [];
+		$i = 0;
+		foreach ($data as $key => $value) {
+			array_push($cols, $key);
+			if ($i > 0) {
+				array_push($values, $value);
+			}
+			$i++;
+		}
+
+		$sql = "INSERT INTO `$table_name` (`". join($cols, '`, `') ."`) VALUES (NULL,'". join($values, "', '") ."')";
+
+		return $this->pdo->exec($sql);
+	}
+
+	function update($table_name, $data, $condition) {
+		if (sizeof($condition) == 0) return false;
+
+		$values = [];
+		$where = [];
+
+		foreach ($data as $key => $value) {
+			array_push($values, "$key = '$value'");
+		}
+
+		foreach ($condition as $key => $value) {
+			array_push($where, "$key = '$value'");
+		}
+
+		$sql = "UPDATE `$table_name` SET ". join($values, ', ') ." WHERE ". join($where, ' AND ');
+
+		return $this->pdo->exec($sql);
+	}
+
+	function delete($table_name, $condition) {
+		if (sizeof($condition) == 0) return false;
+
+		$where = [];
+
+		foreach ($condition as $key => $value) {
+			array_push($where, "$key = '$value'");
+		}
+
+		$sql = "DELETE FROM `$table_name` WHERE ". join($where, ' AND ');
+		
+		return $this->pdo->exec($sql);
+	}
 }

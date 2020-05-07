@@ -8,26 +8,30 @@
 }
 
 .content-space {
-	justify-content: space-between;
+	justify-content: space-around;
 }
 
+
 .form-control-perso {
-	border-bottom-width: 0.13em;
-	border-bottom-color: #dfdfdf;
-	border-top: 0px;
-	border-left: 0px;
-	border-right: 0px;
-	border-radius: 0px;
-	background: #fdfdfd;
-	transition: 0.4s;
+	height: 30px !important;
 }
 
 .form-group label {
 	font-weight: 500 !important;
+	font-size: 14px !important;
 }
 
 .form-control-perso:focus {
 	width: 100%;
 	transition: 0.4s;
 	left: 0;
+}
+
+.form-control::placeholder {
+    color: #a8acb0;
+    opacity: 1;
+    font-size: 15px;
+}
+.form-control option {
+	font-size: small;
 }
