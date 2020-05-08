@@ -65,11 +65,6 @@
     init_table();
   } );
 
-  $('#liste_eleve tbody').on( 'click', 'button', function () {
-        var data = table.row( $(this).parents('tr') ).data();
-        alert( data[0] +"'s salary is: "+ data[ 5 ] );
-  } );
-
   function init_table(url='<?= $base_url ?>/controller/parametrages.php?list=0') {
     table = $('#liste_eleve').DataTable( {
         "ajax": url,

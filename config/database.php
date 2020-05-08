@@ -19,7 +19,8 @@ class database
 		}
 	}
 
-	function get_query($sql)
+	// REQUETE DE SELECTION RAPIDE 
+	function get_query($sql) // RENVOYE UN TABLEAU
 	{
 		$stmt = $this->pdo->prepare($sql);
     	$stmt->execute();
@@ -27,6 +28,11 @@ class database
 		return $stmt->fetchAll();
 	}
 
+	// INSERTION DANS LA BASE
+	/**
+	 * @param $table_name (string) : nom de la table 
+	 * @param $data (array) : les données a inserée
+	*/
 	function insert($table_name, $data) {
 		$cols = [];
 		$values = [];
@@ -44,6 +50,12 @@ class database
 		return $this->pdo->exec($sql);
 	}
 
+	// MODIFICATION DANS LA BASE
+	/**
+	 * @param $table_name (string) : nom de la table 
+	 * @param $data (array) : les données a inserée
+	 * @param $condition (array) : listes des conditions
+	*/
 	function update($table_name, $data, $condition) {
 		if (sizeof($condition) == 0) return false;
 
@@ -63,6 +75,11 @@ class database
 		return $this->pdo->exec($sql);
 	}
 
+	// SUPRESSION DANS LA BASE
+	/**
+	 * @param $table_name: nom de la table 
+	 * @param $condition (array) : listes des conditions
+	*/
 	function delete($table_name, $condition) {
 		if (sizeof($condition) == 0) return false;
 
