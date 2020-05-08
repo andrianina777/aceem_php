@@ -70,6 +70,7 @@
 				header('location: ./');
 			}
 		} else { // MODIFICATION
+			$data['param_id'] = $_POST['id'];
 			if ($db->update('param_divers', $data, ['param_id' => $_POST['id']])) {
 				header('location: ./');
 			}
