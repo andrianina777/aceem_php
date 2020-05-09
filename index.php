@@ -1,4 +1,4 @@
 <?php
-	include 'controller/eleve.php';
-
-	var_dump($list_eleve);
+	if (empty($_SESSION['uid'])) {
+		header('location: ./pages/login');
+	}

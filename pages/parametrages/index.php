@@ -5,6 +5,11 @@
   require_once '../../layout/navbar.php';
   
 ?>
+<style type="text/css">
+  #liste_eleve_filter {
+    display: none;
+  }
+</style>
   <div class="content">
     <div class="container-fluid">
       <div class="search-content">
