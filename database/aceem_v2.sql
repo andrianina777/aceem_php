@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  ven. 08 mai 2020 à 10:39
+-- Généré le :  sam. 09 mai 2020 à 17:19
 -- Version du serveur :  10.1.37-MariaDB
 -- Version de PHP :  7.3.0
 
@@ -97,11 +97,32 @@ INSERT INTO `param_divers` (`param_id`, `param_table`, `param_sigle`, `param_val
 (20, 'Type_paiement', 'EXAMEN BLANC', 'EXAMEN BLANC', 'EXAMEN BLANC', 13),
 (22, 'Type_paiement', 'IDENTITE', 'IDENTITE', 'IDENTITE', 14),
 (23, 'Type_paiement', 'RELEVER DE NOTE', 'RELEVER DE NOTE', 'RELEVER DE NOTE', 15),
-(24, 'Type_paiement', 'SUPPLEMENTAIRE', 'SUPPLEMENTAIRE', 'SUPPLEMENTAIRE', 16),
+(24, 'Type_paiement', 'SUPPL MATIERE', 'SUPPL MATIERE', 'MATIERE SUPPLEMENTAIRE', 16),
 (25, 'Type_paiement', 'TEE-SHIRT', 'TEE-SHIRT', 'TEE-SHIRT', 17),
 (26, 'Type_paiement', 'TRANSFERT', 'TRANSFERT', 'TRANSFERT', 18),
 (27, 'mode_paiement', 'NORMAL', 'NORMAL', 'NORMAL', 19),
-(28, 'mode_paiement', 'REDUIT', 'REDUIT', 'REDUIT', 20);
+(28, 'mode_paiement', 'REDUIT', 'REDUIT', 'REDUIT', 20),
+(31, 'categorie_classe', 'SS+TMS', 'SS+TMS', 'SpÃ©cial Samedi et Tous Mercredi', 0),
+(32, 'categorie_classe', 'AM+SS', 'AM+SS', 'Matin et Special Samedi', 0),
+(33, 'categorie_classe', 'AM+TMS', 'AM+TMS', 'MatinÃ© et Tous Mercredi', 0),
+(34, 'categorie_classe', 'AM+SS+TMS', 'AM+SS+TMS', 'Matin,Special Samedi , Tous Mercredi Samedi', 0),
+(35, 'mention', 'colleges', '3eme', 'classe de 3eme', 0),
+(36, 'mention', 'Lycee', 'BACC A', 'BACC A', 0),
+(37, 'mention', 'Lycee', 'BACC C', 'BACC C', 0),
+(38, 'mention', 'Lycee', 'BACC D', 'BACC D', 0),
+(39, 'mention', 'Lycee', 'technique', 'technique', 0),
+(40, 'mention', 'universitaire', 'gestion', 'gestion', 0),
+(41, 'categorie_classe', 'L1', 'L1', 'L1', 0),
+(42, 'categorie_classe', 'L2', 'L2', 'L2', 0),
+(43, 'categorie_classe', 'L3', 'L3', 'L3', 0),
+(44, 'categorie_classe', 'M1', 'M1', 'M1', 0),
+(45, 'categorie_classe', 'M2', 'M2', 'M2', 0),
+(46, 'mention', 'universitaire', 'MADAGASCAR BUSINESS SCHOOL', 'MADAGASCAR BUSINESS SCHOOL', 0),
+(47, 'mention', 'universitaire', 'SCIENCES ECONOMIQUES & ETUDE DU DEVELOPPEMENT', 'SCIENCES ECONOMIQUES & ETUDE DU DEVELOPPEMENT', 0),
+(48, 'mention', 'universitaire', 'DROIT & SCIENCE POLITIQUE', 'DROIT & SCIENCE POLITIQUE', 0),
+(49, 'mention', 'universitaire', 'COMMUNICATION', 'COMMUNICATION', 0),
+(50, 'mention', 'universitaire', 'SCIENCES DE LA SANTE', 'SCIENCES DE LA SANTE', 0),
+(51, 'mention', 'universitaire', 'INFORMATIQUES & ELECTRONIQUES', 'INFORMATIQUES & ELECTRONIQUES', 0);
 
 -- --------------------------------------------------------
 
@@ -182,7 +203,7 @@ ALTER TABLE `eleves`
 -- AUTO_INCREMENT pour la table `param_divers`
 --
 ALTER TABLE `param_divers`
-  MODIFY `param_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `param_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateurs`
