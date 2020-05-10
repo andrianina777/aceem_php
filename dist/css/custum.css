@@ -35,3 +35,11 @@
 .form-control option {
 	font-size: small;
 }
+
+.btn-pagination a{
+	font-size: 30px;
+	margin-right: 5px;
+}
+.dataTables_info, .dataTables_paginate, .dataTables_filter, .dataTables_length {
+	display: none;
+}

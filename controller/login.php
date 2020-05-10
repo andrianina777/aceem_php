@@ -1,4 +1,9 @@
 <?php
+	if (isset($_GET['logout']) && $_GET['logout']==1) {
+		session_start();
+		session_unset();
+		session_destroy();
+	}
 	require_once '../../config/database.php';
 	require_once '../../config/default.php';
 
@@ -9,12 +14,13 @@
 
 		if ($pseudo && $password) {
 			$db = new database();
+			$password = md5($token_key_start . $password . $token_key_end); 
 			$data = $db->get_query("select utilisateur_id, utilisateur_pseudo from utilisateurs where utilisateur_pseudo='$pseudo' and utilisateur_password='$password'");
 			if (sizeof($data) > 0) {
 				session_start();
 				$_SESSION['uid'] = $data[0]['utilisateur_id'];
 				$_SESSION['pseudo'] = $data[0]['utilisateur_pseudo'];
-				header('location: ../eleves');
+				header('location: ../../');
 			} else {
 				header('location: ./');
 			}

@@ -7,9 +7,14 @@
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Starter Page</li>
+          <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active">Starter Page</li> -->
         </ol>
+        <div class="float-sm-right">
+          <a href="../login?logout=1" class="btn btn-default d-flex">
+            Se deconnecter
+          </a>
+        </div>
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->

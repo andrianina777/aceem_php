@@ -1,3 +1,4 @@
+<?php/* session_start();*/ ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -26,6 +27,7 @@
   <script src="<?=$base_url?>/plugins/datatables/jquery.dataTables.js"></script>
   <script src="<?=$base_url?>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script src="<?=$base_url?>/plugins/sweetalert2/sweetalert2.min.js"></script>
+  <script src="<?=$base_url?>/dist/js/custum.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

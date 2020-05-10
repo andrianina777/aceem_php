@@ -1,11 +1,12 @@
 <?php
-	
 	/***********************************************/
 	//		AJAX LISTE DE TOUT LES PARAMETRAGES
 	/***********************************************/
 	if (isset($_GET['list']) && $_GET['list'] == 0) {
 		require_once '../config/default.php';
 		require_once '../config/database.php';
+		require_once '../helpers/auth.php';
+		is_login($base_url);
 		$db = new database();
 
 		$data = $db->get_query('select * from param_divers');
@@ -21,6 +22,8 @@
 	if (isset($_GET['delete'])) {
 		require_once '../config/default.php';
 		require_once '../config/database.php';
+		require_once '../helpers/auth.php';
+		is_login($base_url);
 		$db = new database();
 
 		if ($db->delete('param_divers', ['param_id' => $_GET['delete']])) {
@@ -35,8 +38,15 @@
 
 	/***********************************************/
 	//				ACTION PAR DEFAUT
-	/***********************************************/
+	/***********************************************/	
+	//		CHECK IF USER IS LOG IN
 	require_once '../../config/default.php';
+  	require_once '../../helpers/auth.php';
+	/**********************************/
+	//		CHECK IF USER IS LOG IN
+	is_login($base_url);
+	/**********************************/
+	
 	require_once '../../config/database.php';
 
 	$page_title = "Paramètrages";
