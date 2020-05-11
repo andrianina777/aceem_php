@@ -82,6 +82,9 @@
             </div>
             <div class="col-sm-9">
               <select class="form-control" id="mention" name="mention"> 
+                    <option></option>
+                    <option>Option A</option>
+                    <option>Option B</option>
                     <option>BACC A</option>
                     <option>BACC C  </option>
                     <option>BACC D </option>
@@ -145,6 +148,21 @@
             </div>
           </div>
         </div>
+                <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-3">
+              <label for="classe">Catégorie classe 2 :</label>
+            </div>
+            <div class="col-sm-9">
+              <select class="form-control" id="type_classe" name="type_classe"> 
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
           <div class="col-sm-6">
           <div class="row">
@@ -156,14 +174,9 @@
             </div>
           </div>
         </div>
-
-
-
-
-
-      </div>
-     </div>
-    </div>
+   </div>
+   </div>
   </div>
+ </div>
 </div>
 <?php require_once '../../layout/footer.php'; ?>
