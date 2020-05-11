@@ -46,7 +46,6 @@ class database
 		}
 
 		$sql = "INSERT INTO `$table_name` (`". join($cols, '`, `') ."`) VALUES (NULL,'". join($values, "', '") ."')";
-
 		return $this->pdo->exec($sql);
 	}
 
@@ -92,5 +91,9 @@ class database
 		$sql = "DELETE FROM `$table_name` WHERE ". join($where, ' AND ');
 		
 		return $this->pdo->exec($sql);
+	}
+
+	function lastInsertId() {
+		return $this->pdo->lastInsertId();
 	}
 }

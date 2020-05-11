@@ -5,11 +5,6 @@
   require_once '../../layout/navbar.php';
   
 ?>
-<style type="text/css">
-  #liste_eleve_filter {
-    display: none;
-  }
-</style>
   <div class="content">
     <div class="container-fluid">
       <div class="search-content">
@@ -19,34 +14,28 @@
               <a href="<?=$base_url?>/pages/parametrages/create.php">
                 <button class="btn btn-danger">Créer</button>
               </a>
+              <div class="float-sm-right btn-pagination">
+                <span class="page-start">0</span> - <span class="page-end">0</span> / <span class="page-total">0</span>&nbsp; 
+                <a href="javascript:void(0)" class="fas fa-arrow-alt-circle-left" onclick="pagePrecedent()"></a>
+                <a href="javascript:void(0)" class="fas fa-arrow-alt-circle-right" onclick="pageSuivant()"></a>
+              </div>
             </div>
           </div>
           <div class="row form-group">
             <div class="col-md-1"></div>
             <div class="col-md-2">
-              <label for="description">Description :</label>
+              <label for="description">Recherche :</label>
             </div>
             <div class="col-md-5">
-              <input type="text" id="description" class="form-control">
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-md-1"></div>
-            <div class="col-md-2">
-              <label for="table_search">Table :</label>
-            </div>
-            <div class="col-md-5">
-              <select id="table_search" class="form-control">
-                <option value="tout">Tout</option>
-              </select>
+              <input type="text" id="search" class="form-control">
             </div>
           </div>
         </div>
       </div>
-      <main>
-        
-        <div class="card-body">
-          <table id="liste_eleve" class="table table-bordered table-hover">
+
+      <main class="row">
+        <div class="col-sm-12">
+          <table id="JodataTable" class="table table-bordered table-hover">
             <thead>
             <tr>
               <th>Table</th>
@@ -60,6 +49,12 @@
           </table>
         </div>
       </main>
+
+      <select class="form-control col-sm-2" id="JoPaginate">
+        <option value="10" selected>10 affichés</option>
+        <option value="20">20 affichés</option>
+        <option value="50">50 affichés</option>
+      </select>
     </div>
   </div>
 <script>
@@ -70,8 +65,27 @@
     init_table();
   } );
 
+  $('#JoPaginate').change(() => {
+    $('#JodataTable').DataTable().page.len($('#JoPaginate').val()).draw();
+  })
+
+  $('#search').on( 'keyup', function () {
+    table.search( this.value ).draw();
+    init_page_info()
+  } );
+
+  function init_page_info() {
+    table.on('draw', () => {
+      let tInfo = table.page.info();
+      $('.page-start').html(tInfo.start + 1) 
+      $('.page-end').html(tInfo.end) 
+      $('.page-total').html(tInfo.recordsDisplay) 
+      $('body .odd .dataTables_empty').html('Aucun résultat trouvé')
+    })
+  }
+
   function init_table(url='<?= $base_url ?>/controller/parametrages.php?list=0') {
-    table = $('#liste_eleve').DataTable( {
+    table = $('#JodataTable').DataTable( {
         "ajax": url,
         "columns": [
             { "data": "param_table" },
@@ -92,6 +106,7 @@
             }
         ]
     } );
+    init_page_info();
   }
 
   function delete_param(param_id) {

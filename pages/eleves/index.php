@@ -1,5 +1,5 @@
 <?php
-  include '../../controller/eleves.php';
+  require_once '../../controller/eleves.php';
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
