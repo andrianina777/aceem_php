@@ -1,4 +1,3 @@
-<?php/* session_start();*/ ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +6,8 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title><?= $title ?></title>
+
+  <link rel="icon" href="<?=$base_url?>/dist/img/favicon.png">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="<?=$base_url?>/plugins/fontawesome-free/css/all.min.css">

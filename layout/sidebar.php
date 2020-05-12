@@ -1,11 +1,11 @@
  <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="javascript:void(0)" class="brand-link">
-      <img src="<?=$base_url?>/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">Aceem</span>
-    </a>
+    <div align="center">
+      <a href="javascript:void(0)" class="brand-link">
+        <img src="<?=$base_url?>/dist/img/favicon.png" height="70px" alt="AdminLTE Logo" style="background: #fff; padding: 5px; border-radius: 5px;">
+      </a>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
