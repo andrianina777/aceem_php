@@ -8,13 +8,13 @@
 		require_once '../helpers/auth.php';
 		is_login($base_url);
 		$db = new database();
-
 		$data = $db->get_query('select * from param_divers');
+		ob_start();
 		header('Content-type: application/json');
-		echo ('{"data":'. json_encode($data) .'}');
+		echo ('{"data":'. json_encode($data, JSON_PRETTY_PRINT) .'}');
+		ob_end_flush();
 		exit();
 	}
-
 
 	/***********************************************/
 	//		AJAX SUPRESSION DU PARAMETRE
