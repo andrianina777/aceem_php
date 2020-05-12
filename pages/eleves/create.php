@@ -148,7 +148,9 @@
             </div>
           </div>
         </div>
-                <div class="col-sm-6">
+               
+
+       <div class="col-sm-6">
           <div class="row">
             <div class="col-sm-3">
               <label for="classe">Catégorie classe 2 :</label>
