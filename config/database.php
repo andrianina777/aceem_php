@@ -96,4 +96,8 @@ class database
 	function lastInsertId() {
 		return $this->pdo->lastInsertId();
 	}
+
+	function findAllIn($table_name) {
+		return $this->get_query("select * from $table_name");
+	}
 }
