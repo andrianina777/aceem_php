@@ -112,79 +112,9 @@
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-        </div>
-
-        <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label for="classe">Catégorie classe :</label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-control" id="type_classe" name="type_classe"> 
-                    <option></option>
-                    <option>AM</option>
-                    <option>SS</option>
-                    <option>TMS</option>
-                    <option>SS+TMS</option>
-                    <option>AM+SS</option>
-                    <option>AM+TMS</option>
-                    <option>AM+SS+TMS</option> 
-                    <option>L1</option>
-                    <option>L2</option>
-                    <option>L3</option>
-                    <option>M1</option>
-                    <option>M2</option>   
-              </select>
-            </div>
-          </div>
-        </div>
-            
-          <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label for="date_inscription">Date de naissance:</label>
-            </div>
-            <div class="col-sm-9">
-              <input type="date" id="date_inscription" class="form-control form-control-perso" placeholder="date_inscription">
-            </div>
-          </div>
-        </div>
-               
-
-       <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label for="classe">Catégorie classe 2 :</label>
-            </div>
-            <div class="col-sm-9">
-              <select class="form-control" id="type_classe" name="type_classe"> 
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-          <div class="col-sm-6">
-          <div class="row">
-            <div class="col-sm-3">
-              <label for="date_inscription">Lieu de naissance:</label>
-            </div>
-            <div class="col-sm-9">
-              <input type="text" id="date_inscription" class="form-control form-control-perso" placeholder="Lieu de naissance">
-            </div>
-          </div>
-        </div>
-   </div>
-   </div>
-=======
         </main>
       </form>
     </div>
->>>>>>> 1fed65e018506502eac504809bb195ef3a08d5b4
   </div>
 </div>
 <?php require_once '../../layout/footer.php'; ?>
