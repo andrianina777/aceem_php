@@ -90,7 +90,11 @@
         "ajax": url,
         "columns": [
             { "data": (data, type, full) => {
-              return `<img src="<?=$base_url?>/resources/eleves/${data.eleve_photo}" height="80px">`;
+              if (data.eleve_photo == '-') {
+                return `<div align="center"><i class="fa fa-user fa-2x" aria-hidden="true"></i></div>`;
+              } else {
+                return `<img src="<?=$base_url?>/resources/eleves/${data.eleve_photo}" height="80px">`;
+              }
             } },
             { "data": "eleve_matricule" },
             { "data": (data, type, full) => {
