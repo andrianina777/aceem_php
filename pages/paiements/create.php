@@ -174,6 +174,23 @@
           </div>
        </div>
     </div>
+<div class="row form-group">
+            <div class="col-sm-4">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="date_naissance">Date de naissance  <strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-9">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
+                    <input type="date" name="date_naissance" id="date_naissance" value="<?= $data_eleve ? $data_eleve->eleve_date_naissance :'' ?>" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+                  </div>
+                  <div class="text-danger" id="error_date_naissance"></div>
+                </div>
+              </div>
+            </div>
 
           <div class="row form-group">
             <div class="col-sm-6">
