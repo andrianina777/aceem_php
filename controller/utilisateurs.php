@@ -49,7 +49,7 @@
 	/**********************************/
 	require_once '../../config/database.php';
 
-	$page_title = "Liste des utilisateurs";
+	$page_title = "Utilisateurs";
 	$db = new database();
 
 	$data_user = null;
