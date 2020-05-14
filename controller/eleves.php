@@ -64,7 +64,7 @@
 
 	$error = '';
 
-	$page_title = "Liste des utilisateurs";
+	$page_title = "Liste des élèves";
 	$db = new database();
 
 	$data_eleve = null;

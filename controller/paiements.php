@@ -49,7 +49,7 @@
 	
 	require_once '../../config/database.php';
 
-	$page_title = "Paramètrages";
+	$page_title = "Listes des Paiements";
 	$db = new database();
 
 	$data_param = null;
