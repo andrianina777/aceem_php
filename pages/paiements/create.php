@@ -138,7 +138,7 @@
             </div>
             <div class="col-sm-9">
               <select class="form-control" id="type_classe" name="type_classe"> 
-                    <option></option>
+                    <option>Aucun</option>
                     <option>AM</option>
                     <option>SS</option>
                     <option>TMS</option>
@@ -174,48 +174,92 @@
           </div>
        </div>
     </div>
-<div class="row form-group">
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="date_naissance">Date de naissance  <strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                    </div>
-                    <input type="date" name="date_naissance" id="date_naissance" value="<?= $data_eleve ? $data_eleve->eleve_date_naissance :'' ?>" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
-                  </div>
-                  <div class="text-danger" id="error_date_naissance"></div>
-                </div>
-              </div>
-            </div>
 
           <div class="row form-group">
             <div class="col-sm-6">
               <div class="row">
                 <div class="col-sm-3">
-                  <label for="description">Déscription : </label>
+                  <label for="matricule">Date :</label>
                 </div>
                 <div class="col-sm-9">
-                  <textarea id="description" name="description" class="form-control"><?= $data_param ? $data_param->param_description :'' ?></textarea>
+                  <input type="date" name="date" value="<?= $data_param ? $data_param->param_valeur :'' ?>" id="date" class="form-control form-control-perso">
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="row form-group">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-3">
+              <label for="classe">Type de paiement :</label>
+            </div>
+            <div class="col-sm-9">
+              <select class="form-control" id="type_paiement" name="type_paiement"> 
+                    <option>BACC</option>
+                    <option>BEPC</option>
+                    <option>CARNET</option>
+                    <option>CARTE</option>
+                    <option>CERTIFICAT</option>
+                    <option>CHANGEMENT DE CLASSE</option>
+                    <option>DROIT</option>
+                    <option>ECOLAGE</option>
+                    <option>EXAMEN BLANC</option>
+                    <option>IDENTITE</option>
+                    <option>RELEVER DE NOTE</option>
+                    <option>SUPPL MATIERE</option>
+                    <option>TEE-SHIRT</option>
+                    <option>TRANSFERT</option>  
+              </select>
+            </div>
+          </div>
+        </div>
+     </div>
+
           <div class="row form-group">
             <div class="col-sm-6">
               <div class="row">
                 <div class="col-sm-3">
-                  <label for="ordre">Ordre : </label>
-                </div>
+                  <label for="numero">Numéro Reçu:</label><!--ito ilay atao miseo automatiques-->
+                </div>                                     <!--atao miseo koa ny dernier numero napidirina-->
                 <div class="col-sm-9">
-                  <input type="number" min="0" name="ordre" value="<?= $data_param ? $data_param->param_ordre :'' ?>" id="ordre" class="form-control form-control-perso" placeholder="Ordre">
+                  <input type="text" name="recu" value="<?= $data_param ? $data_param->param_valeur :'' ?>" id="recu" class="form-control form-control-perso" placeholder="Numéro Reçu">
                 </div>
               </div>
             </div>
+           </div>
+
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="numero">Montant Payé :</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" name="montant" value="<?= $data_param ? $data_param->param_valeur :'' ?>" id="montant" class="form-control form-control-perso" placeholder="Montant Payé">
+                </div>
+              </div>
+            </div>
+           </div>
+
+      <div class="row form-group">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-3">
+              <label for="classe">Mode de paiement:</label>
+            </div>
+            <div class="col-sm-9">
+              <select class="form-control" id="mode_paiement" name="mode_paiement"> 
+                    <option>Normal</option>
+                    <option>Réduit</option>
+                       
+              </select>
+            </div>
           </div>
+        </div>
+     </div>
+
+          
         </main>
       </form>
     </div>
