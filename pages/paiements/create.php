@@ -9,7 +9,7 @@
     margin-left: 50px; 
   }
 </style>
-<div class="content">
+<div class="content"> <!--Mbola tsy mandeha ilay boutton enregistrer sy annuler amty fa copie coller config io-->
   <div class="container-fluid">
     <div class="container">
       <form method="post">
