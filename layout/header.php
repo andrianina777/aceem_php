@@ -17,18 +17,18 @@
   <link rel="stylesheet" href="<?=$base_url?>/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="<?=$base_url?>/dist/css/custum.css">
   <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- <link async href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
 
   <!-- REQUIRED SCRIPTS -->
 
   <!-- jQuery -->
   <script src="<?=$base_url?>/plugins/jquery/jquery.min.js"></script>
+  <script src="<?=$base_url?>/dist/js/custum.js"></script>
   <!-- Bootstrap 4 -->
   <script src="<?=$base_url?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="<?=$base_url?>/plugins/datatables/jquery.dataTables.js"></script>
   <script src="<?=$base_url?>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script src="<?=$base_url?>/plugins/sweetalert2/sweetalert2.min.js"></script>
-  <script src="<?=$base_url?>/dist/js/custum.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

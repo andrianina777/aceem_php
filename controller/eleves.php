@@ -75,7 +75,6 @@
 	$all_classe_cat = $db->get_query("select * from param_divers where param_table='categorie_classe'");
 	$all_mention = $db->get_query("select * from param_divers where param_table='mention'");
 	$all_session = $db->get_query("select * from param_divers where param_table='categorie_session'");
-	$all_lieu = $db->get_query("select * from param_divers where param_table='lieu_inscription'");
 
 	// AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);

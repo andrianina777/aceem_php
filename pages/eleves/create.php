@@ -77,7 +77,7 @@
             <div class="col-sm-4">
               <div class="row">
                 <div class="col-sm-3">
-                  <label for="adresse">Adresse   <strong class="text-danger">*</strong></label>
+                  <label for="adresse">Adresse  <strong class="text-danger">*</strong></label>
                 </div>
                 <div class="col-sm-9">
                   <input type="text" name="adresse" value="<?= $data_eleve ? $data_eleve->eleve_adresse :'' ?>" id="adresse" class="form-control form-control-sm " placeholder="Adresse">

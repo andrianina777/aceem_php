@@ -1,11 +1,18 @@
 <?php
 	session_start();
-	function is_privileged() {
+	function is_privileged($menu) {
 		$db = new database();
-
 		$uid = array_key_exists('uid', $_SESSION) ? $_SESSION['uid'] : -1;
-		$user = $db->get_query("select utilisateur_id from utilisateurs where utilisateur_id=$uid");
-		return sizeof($user) != 0;
+		$query = "
+			SELECT p.privilege_is_active
+			FROM privileges AS p
+			JOIN menus AS m ON m.menu_id=p.privilege_menu_fk
+			JOIN groupes AS g ON g.groupe_id=p.privilege_groupe_fk
+			JOIN utilisateurs AS u ON u.utilisateur_groupe_fk=g.groupe_id
+			WHERE u.utilisateur_id=$uid AND m.menu_nom='$menu'
+		";
+		$result = $db->get_query($query)[0]['privilege_is_active'];
+		return $result == 1;
 	}
 
 	function get_user() {

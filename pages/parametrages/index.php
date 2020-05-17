@@ -27,7 +27,7 @@
               <label for="description">Recherche :</label>
             </div>
             <div class="col-md-5">
-              <input type="text" id="search" class="form-control">
+              <input type="text" id="search" class="form-control form-control-sm">
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@
 
       <main class="row">
         <div class="col-sm-12">
-          <table id="JodataTable" class="table table-bordered table-hover">
+          <table id="JodataTable" class="table table-hover">
             <thead>
             <tr>
               <th>Table</th>
@@ -50,7 +50,7 @@
         </div>
       </main>
 
-      <select class="form-control col-sm-2" id="JoPaginate">
+      <select class="form-control form-control-sm col-sm-2" id="JoPaginate">
         <option value="10" selected>10 affichés</option>
         <option value="20">20 affichés</option>
         <option value="50">50 affichés</option>
@@ -104,6 +104,9 @@
                   return btn;
                 }
             }
+        ],
+        'columnDefs': [
+          { "targets": 5, "className": "text-center", "width": "2%" },
         ]
     } );
     init_page_info();

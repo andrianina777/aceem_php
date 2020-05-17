@@ -27,7 +27,7 @@
               <label for="description">Recherche :</label>
             </div>
             <div class="col-md-5">
-              <input type="text" id="search" class="form-control">
+              <input type="text" id="search" class="form-control form-control-sm">
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@
         
       <main class="row">
         <div class="col-sm-12">
-          <table id="JodataTable" class="table table-bordered table-hover">
+          <table id="JodataTable" class="table table-hover">
             <thead>
               <tr>
                 <th>Photo</th>
@@ -51,7 +51,7 @@
         </div>
       </main>
       <div class="clearfix"></div>
-      <select class="form-control col-sm-2" id="JoPaginate">
+      <select class="form-control form-control-sm col-sm-2" id="JoPaginate">
         <option value="10" selected>10 affichés</option>
         <option value="20">20 affichés</option>
         <option value="50">50 affichés</option>
@@ -85,6 +85,14 @@
     })
   }
 
+  function date_formatter(value) {
+    const date = new Date(value);
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    if (!isNaN(date.getDate())) {
+      return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+    }
+  }
+
   function init_table(url='<?= $base_url ?>/controller/eleves.php?list=0') {
     table = $('#JodataTable').DataTable( {
         "ajax": url,
@@ -104,7 +112,9 @@
               return `${data.classe} ${data.classe_cat!=null?data.classe_cat:''} ${data.mention!=null?data.mention:''}`;
             } },
             { "data": "session" },
-            { "data": "eleve_date_inscription" },
+            { "data": (data, type, full) => {
+              return date_formatter(data.eleve_date_inscription);
+            } },
             {
               "data": function(data, type, full) {
                   let btn = `
@@ -116,6 +126,10 @@
                   return btn;
                 }
             }
+        ],
+        'columnDefs': [
+          { "targets": 5, "className": "text-center", "width": "10%" },
+          { "targets": 6, "className": "text-center", "width": "2%" },
         ]
     } );
     init_page_info()
