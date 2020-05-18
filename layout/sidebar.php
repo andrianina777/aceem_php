@@ -29,8 +29,10 @@
               </p>
             </a>
           </li>
-
-          <li class="nav-item has-treeview">
+          <?php if ( is_privileged('historiques') || is_privileged('utilisateurs') || is_privileged('groupes')):
+            $open = $page_title=='Utilisateurs' || $page_title=='Groupes' || $page_title=='Historiques' ?'menu-open':'';
+          ?>
+          <li class="nav-item has-treeview <?=$open?>">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
@@ -39,27 +41,34 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              <?php if (is_privileged('utilisateurs')): ?>
               <li class="nav-item">
-                <a href="<?=$base_url?>/pages/utilisateurs" class="nav-link <?=$page_title=='Liste des utilisateurs'?'active':''?>">
+                <a href="<?=$base_url?>/pages/utilisateurs" class="nav-link <?=$page_title=='Utilisateurs'?'active':''?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Utilisateurs</p>
                 </a>
               </li>
+              <?php endif; ?>
+              <?php if (is_privileged('groupes')): ?>
               <li class="nav-item">
-                <a href="<?=$base_url?>/pages/groupes" class="nav-link">
+                <a href="<?=$base_url?>/pages/groupes" class="nav-link <?=$page_title=='Groupes'?'active':''?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Groupes</p>
                 </a>
               </li>
+              <?php endif; ?>
+              <?php if (is_privileged('historiques')): ?>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link <?=$page_title=='Historiques'?'active':''?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Historiques</p>
                 </a>
               </li>
+              <?php endif; ?>
             </ul>
           </li>
-
+          <?php endif; ?>
+          <?php if (is_privileged('parametrages')): ?>
           <li class="nav-item">
             <a href="<?=$base_url?>/pages/parametrages" class="nav-link <?=$page_title=='Paramètrages'?'active':''?>">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -68,30 +77,27 @@
               </p>
             </a>
           </li>
+          <?php endif; ?>
+          <?php if (is_privileged('eleves')): ?>
           <li class="nav-item">
-            <a href="<?=$base_url?>/pages/eleves" class="nav-link">
+            <a href="<?=$base_url?>/pages/eleves" class="nav-link <?=$page_title=='Élèves'?'active':''?>">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Élèves
               </p>
             </a>
           </li>
+          <?php endif; ?>
+          <?php if (is_privileged('paiements')): ?>
           <li class="nav-item">
-            <a href="<?=$base_url?>/pages/paiements" class="nav-link">
+            <a href="<?=$base_url?>/pages/paiements" class="nav-link <?=$page_title=='Paiements'?'active':''?>">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Paiements
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="<?=$base_url?>/pages/classes" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Classes
-              </p>
-            </a>
-          </li>
+          <?php endif; ?>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

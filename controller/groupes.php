@@ -53,6 +53,7 @@
 	$db = new database();
 
 	$data_groupe = null;
+	$data_menus = [];
 	if (isset($_GET['id'])) {
 		$data_groupe = (object) $db->get_query('select * from groupes where groupe_id='. $_GET['id'])[0];
 		$data_menus = $db->get_query('select * from privileges where privilege_groupe_fk='. $_GET['id']);
