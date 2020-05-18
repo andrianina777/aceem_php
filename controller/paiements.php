@@ -115,7 +115,7 @@
 					<td></td>
 				</tr>
 			";
-		$footer = "</tr></table><footer><div align='center'>Antananarivo le , </div></footer></body></html>";
+		$footer = "</tr></table><footer><div align='center'>Antananarivo le , 18 Mai 2020 </div></footer></body></html>";
 		$html = $header . $content . $footer;
 		$mpdf = new \Mpdf\Mpdf();
 		$mpdf->WriteHTML($html);

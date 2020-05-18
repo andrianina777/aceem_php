@@ -54,7 +54,7 @@ background-color: #f2f2f2;
 	</table>
 
 <footer>
-	<div align="center">Antananarivo le , </div>
+	<div align="center">Antananarivo le , 18 Mai 2020</div>
 </footer>
 
 
