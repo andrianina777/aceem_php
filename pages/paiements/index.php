@@ -121,12 +121,14 @@
       </select>
     </div>
   </div>
+
 <script>
 
   table = null;
 
   $(document).ready(function() {
     init_table();
+    $('#JodataTable').append('<tfoot><tr><td><strong>Total<strong></td></tr></tfoot>')
   } );
 
   $('#btn_search').click(() => {
