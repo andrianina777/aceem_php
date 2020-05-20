@@ -128,7 +128,15 @@
 
   $(document).ready(function() {
     init_table();
-    $('#JodataTable').append('<tfoot><tr><td><strong>Total<strong></td></tr></tfoot>')
+   $('#JodataTable').append(`
+      <tfoot>
+        <tr>
+          <td><strong>Total<strong></td>
+          <td>${get_total_by_child(2)}</td>
+          <td>${get_total_by_child(2)}</td>
+        </tr>
+      </tfoot>`)
+ 
   } );
 
   $('#btn_search').click(() => {
@@ -175,6 +183,14 @@
     }
   }
 
+  function get_total_by_child(nbr_child) {
+    let mt_tmp = 0;
+    $("#JodataTable tbody tr").each(function() {
+      mt_tmp += parseInt($(this).find("td:nth-child(" +nbr_child+ ")").html()) // avadika int loh le izy fa lasa concatenation
+    });
+    return mt_tmp;
+  }
+
   function init_table(url='<?= $base_url ?>/controller/paiements.php?list=0') {
     table = $('#JodataTable').DataTable( {
         "ajax": url,
@@ -185,7 +201,8 @@
 						{ "data": (data, type, full) => {
 							let m = parseInt(data.paiement_total).toLocaleString();
 							let montant = m.split(',').join(' ');
-							return `${montant} Ar &nbsp;  `;
+              // return `${montant} Ar &nbsp;  `;
+							 return `${data.paiement_total}`;
 						} },
 						{ "data": (data, type, full) => {
 							let m = parseInt(data.paiement_montant).toLocaleString();
