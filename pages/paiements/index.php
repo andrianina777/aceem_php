@@ -185,10 +185,11 @@
 
   function get_total_by_child(nbr_child) {
     let mt_tmp = 0;
-    $("#JodataTable tbody tr").each(function() {
-      mt_tmp += parseInt($(this).find("td:nth-child(" +nbr_child+ ")").html()) // avadika int loh le izy fa lasa concatenation
-    });
-    return mt_tmp;
+      $("#JodataTable tbody tr").each(function() {
+      mt_tmp += parseInt ($(this).find("td:nth-child(" +nbr_child+ ")").html()); // avadika int loh le izy fa lasa concatenation
+  
+     });
+       return mt_tmp  ;
   }
 
   function init_table(url='<?= $base_url ?>/controller/paiements.php?list=0') {
@@ -240,6 +241,8 @@
                   return btn;
                 }
             }
+           
+         
 		],
 		'columnDefs': [
 			{ "targets": 0, "className": "text-center" },
@@ -250,6 +253,13 @@
 			{ "targets": 9, "className": "text-center", "width": "2%" },
 		]
     } );
+    
+   /* ],
+     "initComplete": function (settings, json) {
+        AfterLoad();
+       }
+    ] );*/    
+
     init_page_info()
   }
 

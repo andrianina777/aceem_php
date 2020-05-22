@@ -164,6 +164,7 @@
                 </div>
                 <div class="col-sm-9">
                   <select name="session" id="session" class="form-control form-control-sm">
+                  <option value="-1">Aucun</option>
                     <?php foreach ($all_session as $i => $session):
                       $selected = isset($data_eleve) && $data_eleve->eleve_classe_session_param_fk==$session['param_id'] ? 'selected' :'';
                     ?>
