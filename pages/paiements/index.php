@@ -3,8 +3,16 @@
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
-  
 ?>
+  <style type="text/css">
+    #JodataTable tbody tr td:nth-child(4),
+    #JodataTable tfoot tr td:nth-child(4) {
+      color: red;
+    }
+    #JodataTable tfoot {
+      background-color: #eee;
+    }
+  </style>
   <div class="content">
     <div class="container-fluid">
       <div class="search-content">
@@ -23,7 +31,7 @@
                   <label for="description">Recherche :</label>
                 </div>
                 <div class="col-sm-7">
-                  <input type="text" id="search" class="form-control form-control-sm">
+                  <input type="text" id="search" class="form-control form-control-sm" placeholder="NC, matricule, nom, ...">
                 </div>
               </div>
             </div>
@@ -58,23 +66,6 @@
             <div class="col-sm-5">
               <div class="row form-group">
                 <div class="col-sm-5">
-                  <label for="filtrer_par">Filtrer par :</label>
-                </div>
-                <div class="col-sm-7">
-                  <select name="filtrer_par" id="filtrer_par" class="form-control form-control-sm">
-                    <option value="tout">Tout</option>
-                    <option value="deperdition">Classe</option>
-                    <option value="payer">Session</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
                   <label for="date_du">Date :</label>
                 </div>
                 <div class="col-sm-7">
@@ -98,7 +89,7 @@
           <table id="JodataTable" class="table table-hover">
             <thead>
               <tr>
-                <th>Date de dépôt</th>
+                <th>Date de saisie</th>
                 <th>Total</th>
                 <th>Payer</th>
                 <th>Reste</th>
@@ -106,18 +97,33 @@
                 <th>Mode</th>
                 <th>Matricule</th>
                 <th>Nom et prénom</th>
-                <th>Classe</th>
-                <th>Action</th>
+                <th>NC</th>
+                <th>Classe (Session)</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <td></td>
+                <td align="right" id="total_total"></td>
+                <td align="right" id="total_payer"></td>
+                <td align="right" id="total_reste"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </main>
       <div class="clearfix"></div>
       <select class="form-control form-control-sm col-sm-2" id="JoPaginate">
-        <option value="10" selected>10 affichés</option>
-        <option value="20">20 affichés</option>
-        <option value="50">50 affichés</option>
+        <option value="10" selected>10/pages</option>
+        <option value="20">20/pages</option>
+        <option value="50">50/pages</option>
       </select>
     </div>
   </div>
@@ -128,16 +134,7 @@
 
   $(document).ready(function() {
     init_table();
-   $('#JodataTable').append(`
-      <tfoot>
-        <tr>
-          <td><strong>Total<strong></td>
-          <td>${get_total_by_child(2)}</td>
-          <td>${get_total_by_child(2)}</td>
-        </tr>
-      </tfoot>`)
- 
-  } );
+  });
 
   $('#btn_search').click(() => {
     let type_recherche = $('#type_recherche').val();
@@ -150,10 +147,9 @@
 
   $('#btn_print').click(() => {
     let type_recherche = $('#type_recherche').val();
-    let filtrer_par = $('#filtrer_par').val();
     let date_du = $('#date_du').val();
     let date_au = $('#date_au').val();
-    window.open(`<?= $base_url ?>/controller/paiements.php?pdf=0&type_recherche=${type_recherche}&filtrer_par=${filtrer_par}&date_du=${date_du}&date_au=${date_au}`)
+    window.open(`<?= $base_url ?>/controller/paiements.php?pdf=0&type_recherche=${type_recherche}&date_du=${date_du}&date_au=${date_au}`)
   })
 
   $('#JoPaginate').change(() => {
@@ -162,6 +158,7 @@
 
   $('#search').on( 'keyup', function () {
     table.search( this.value ).draw();
+    setTotal()
     init_page_info()
   } );
 
@@ -174,6 +171,12 @@
       $('body .odd .dataTables_empty').html('Aucun résultat trouvé')
     })
   }
+
+  function setTotal() {
+    $('#total_total').html(`${get_total_by_child(2)}Ar`);
+    $('#total_payer').html(`${get_total_by_child(3)}Ar`);
+    $('#total_reste').html(`${get_total_by_child(4)}Ar`);
+  }
   
   function date_formatter(value) {
     const date = new Date(value);
@@ -185,11 +188,20 @@
 
   function get_total_by_child(nbr_child) {
     let mt_tmp = 0;
-      $("#JodataTable tbody tr").each(function() {
-      mt_tmp += parseInt ($(this).find("td:nth-child(" +nbr_child+ ")").html()); // avadika int loh le izy fa lasa concatenation
-  
-     });
-       return mt_tmp  ;
+    $("#JodataTable tbody tr").each(function() {
+      let libelle = $(this).find("td:nth-child(" +nbr_child+ ")").html();
+      if (libelle != undefined) {
+        let mt = libelle.split(' Ar')[0];
+        let nbMt = mt.split(' ').join('');
+        mt_tmp += parseInt(nbMt);
+      }
+    });
+    return format_montant(mt_tmp);
+  }
+
+  function format_montant(montant) {
+    let m = parseInt(montant).toLocaleString();
+    return m.split(',').join(' ');
   }
 
   function init_table(url='<?= $base_url ?>/controller/paiements.php?list=0') {
@@ -200,20 +212,14 @@
 							return date_formatter(data.paiement_date_depot);
 						} },
 						{ "data": (data, type, full) => {
-							let m = parseInt(data.paiement_total).toLocaleString();
-							let montant = m.split(',').join(' ');
-              // return `${montant} Ar &nbsp;  `;
-							 return `${data.paiement_total}`;
+              return `${format_montant(data.paiement_total)} Ar`;
 						} },
 						{ "data": (data, type, full) => {
-							let m = parseInt(data.paiement_montant).toLocaleString();
-							let montant = m.split(',').join(' ');
-							return `${montant} Ar &nbsp;  `;
+							return `${format_montant(data.paiement_montant)} Ar`;
 						} },
 						{ "data": (data, type, full) => {
-							let m = parseInt(data.paiement_total - data.paiement_montant).toLocaleString();
-							let montant = m.split(',').join(' ');
-							return `<span class="text-danger">${montant} Ar &nbsp;  </span>`;
+							let montant = format_montant(data.paiement_total - data.paiement_montant);
+							return `${montant} Ar`;
 						} },
 						{ "data": (data, type, full) => {
 							return `${data.type}`;
@@ -228,9 +234,17 @@
               return `${data.eleve_nom} ${data.eleve_prenom}`;
             } },
             { "data": (data, type, full) => {
-							return `${data.classe} ${data.classe_cat!=null?data.classe_cat:''} ${data.mention!=null?data.mention:''}`;
+              return `${data.paiement_nc}`;
+            } },
+            { "data": (data, type, full) => {
+							let html = ``;
+              for (var i = 0; i < data.classe.length; i++) {
+                let cl = data.classe[i];
+                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''} (${cl.session})<br>`;
+              }
+              return html;
 						} },
-            {
+            /*{
               "data": function(data, type, full) {
                   let btn = `
                   <div class="flex content-space">
@@ -240,29 +254,23 @@
                   `;
                   return btn;
                 }
-            }
-           
-         
-		],
-		'columnDefs': [
-			{ "targets": 0, "className": "text-center" },
-			{ "targets": 1, "className": "text-right" },
-			{ "targets": 2, "className": "text-right" },
-			{ "targets": 3, "className": "text-right" },
-			{ "targets": 6, "className": "text-center", "width": "5%" },
-			{ "targets": 9, "className": "text-center", "width": "2%" },
-		]
-    } );
-    
-   /* ],
-     "initComplete": function (settings, json) {
-        AfterLoad();
-       }
-    ] );*/    
-
+            }*/
+    		],
+    		'columnDefs': [
+    			{ "targets": 0, "className": "text-center" },
+    			{ "targets": 1, "className": "text-right" },
+    			{ "targets": 2, "className": "text-right" },
+    			{ "targets": 3, "className": "text-right" },
+    			{ "targets": 6, "className": "text-center", "width": "5%" },
+    			// { "targets": 10, "className": "text-center", "width": "2%" },
+        ],
+         "initComplete": function (settings, json) {
+            setTotal();
+          }
+      });
     init_page_info()
   }
-
+/*
   function delete_paiement(paiement_id) {
     Swal.fire({
       title: 'Êtes-vous sûre de le supprimer?',
@@ -294,6 +302,6 @@
         })
       }
     })
-  }
+  }*/
 </script>
 <?php require_once '../../layout/footer.php'; ?>

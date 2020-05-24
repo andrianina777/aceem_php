@@ -3,7 +3,6 @@
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
-  
 ?>
   <div class="content">
     <div class="container-fluid">
@@ -52,9 +51,9 @@
       </main>
       <div class="clearfix"></div>
       <select class="form-control form-control-sm col-sm-2" id="JoPaginate">
-        <option value="10" selected>10 affichés</option>
-        <option value="20">20 affichés</option>
-        <option value="50">50 affichés</option>
+        <option value="10" selected>10/pages</option>
+        <option value="20">20/pages</option>
+        <option value="50">50/pages</option>
       </select>
     </div>
   </div>
@@ -109,9 +108,21 @@
               return `${data.eleve_nom} ${data.eleve_prenom}`;
             } },
             { "data": (data, type, full) => {
-              return `${data.classe} ${data.classe_cat!=null?data.classe_cat:''} ${data.mention!=null?data.mention:''}`;
+              let html = ``;
+              for (var i = 0; i < data.classe.length; i++) {
+                let cl = data.classe[i];
+                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''}<br>`;
+              }
+              return html;
             } },
-            { "data": "session" },
+            { "data": (data, type, full) => {
+              let html = ``;
+              for (var i = 0; i < data.classe.length; i++) {
+                let cl = data.classe[i];
+                html += `${cl.session}<br>`;
+              }
+              return html;
+            } },
             { "data": (data, type, full) => {
               return date_formatter(data.eleve_date_inscription);
             } },
@@ -120,7 +131,7 @@
                   let btn = `
                   <div class="flex content-space">
                     <a href="<?=$base_url?>/pages/eleves/create.php?id=${data.eleve_id}"><i class="fa fa-edit"></i></a>
-                    <a href="javascript:void(0)" onclick="delete_eleve(${data.eleve_id})"><i class="fa fa-trash text-danger"></i></a>
+                    <a href="javascript:void(0)" onclick="delete_eleve(${data.eleve_id},'${data.eleve_nom}', '${data.eleve_photo}')"><i class="fa fa-trash text-danger"></i></a>
                   </div>
                   `;
                   return btn;
@@ -135,7 +146,7 @@
     init_page_info()
   }
 
-  function delete_eleve(eleve_id) {
+  function delete_eleve(eleve_id, eleve_nom, eleve_photo) {
     Swal.fire({
       title: 'Êtes-vous sûre de le supprimer?',
       text: `L'action est irreversible.`,
@@ -149,7 +160,8 @@
       if (result.value) {
         $.ajax({
           url: '<?=$base_url?>/controller/eleves.php?delete='+ eleve_id,
-          type: 'post',
+          type: 'get',
+          data: {eleve_nom, eleve_photo},
           success: (r) => {
             if (r.status === 'success') {
               table.destroy();

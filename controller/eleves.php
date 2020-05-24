@@ -1,16 +1,5 @@
 <?php
-	$query = "
-		SELECT 	e.*,
-				c.param_description AS classe,
-				c_cat.param_description AS classe_cat,
-				m.param_description AS mention,
-				s.param_description AS session
-		FROM eleves AS e 
-		LEFT JOIN param_divers AS c ON e.eleve_classe_param_fk=c.param_id
-		LEFT JOIN param_divers AS c_cat ON e.eleve_classe_cat_param_fk=c_cat.param_id
-		LEFT JOIN param_divers AS m ON e.eleve_classe_mention_param_fk=m.param_id
-		LEFT JOIN param_divers AS s ON e.eleve_classe_session_param_fk=s.param_id
-	";
+	$query = "SELECT e.* FROM eleves AS e";
 	/***********************************************/
 	//		AJAX LISTE DE TOUT LES UTILISATEURS
 	/***********************************************/
@@ -22,6 +11,21 @@
 		$db = new database();
 
 		$data = $db->get_query($query);
+		foreach ($data as $i => $eleve) {
+			$q = "
+				SELECT 	classes.classe_categorie AS categorie,
+						c.param_description AS classe,
+						m.param_description AS mention,
+						s.param_description AS session
+				FROM classes
+				LEFT JOIN param_divers AS c ON classes.classe_param_fk=c.param_id
+				LEFT JOIN param_divers AS m ON classes.classe_mention_param_fk=m.param_id
+				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
+				WHERE classes.classe_eleve_fk={$eleve['eleve_id']}
+			";
+			$classe = $db->get_query($q);
+			$data[$i]['classe'] = $classe;
+		}
 		header('Content-type: application/json');
 		echo ('{"data":'. json_encode($data) .'}');
 		exit();
@@ -40,6 +44,11 @@
 		$db = new database();
 
 		if ($db->delete('eleves', ['eleve_id' => $_GET['delete']])) {
+			$file = $upload_dir . 'eleves/' . $_GET['eleve_photo'];
+			if (file_exists($file)) {
+				unlink($file);
+			}
+			add_history("Suppression élèves ". $_GET['eleve_nom']);
 			header('Content-type: application/json');
 			echo ('{ "status": "success" }');
 		} else {
@@ -67,11 +76,29 @@
 	$db = new database();
 
 	$data_eleve = null;
+	$classe_list = [];
+	$classe_data = '';
 	if (isset($_GET['id'])) {
-		$data_eleve = (object) $db->get_query( $query .' where e.eleve_id='. $_GET['id'])[0];
+		$eleve_id = $_GET['id'];
+		$data_eleve = (object) $db->get_query( $query .' where e.eleve_id='. $eleve_id)[0];
+		$q = "
+			SELECT 	classes.classe_categorie AS categorie,
+					c.param_description AS classe,
+					m.param_description AS mention,
+					s.param_description AS session,
+					classes.classe_id AS id	
+			FROM classes
+			LEFT JOIN param_divers AS c ON classes.classe_param_fk=c.param_id
+			LEFT JOIN param_divers AS m ON classes.classe_mention_param_fk=m.param_id
+			LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
+			WHERE classes.classe_eleve_fk=$eleve_id
+		";
+		$classe_list = $db->get_query($q);
+		$c = $db->get_query("SELECT classe_id AS id, classe_param_fk, classe_categorie, classe_mention_param_fk, classe_session_param_fk FROM classes WHERE classe_eleve_fk=$eleve_id");
+		$classe_data = json_encode($c);
 	}
 
-	$all_classe = $db->get_query("select * from param_divers where param_table='classe'");
+	$all_classe = $db->get_query("select * from param_divers where param_table='classe' order by param_ordre");
 	$all_classe_cat = $db->get_query("select * from param_divers where param_table='categorie_classe'");
 	$all_mention = $db->get_query("select * from param_divers where param_table='mention'");
 	$all_session = $db->get_query("select * from param_divers where param_table='categorie_session'");
@@ -79,16 +106,13 @@
 	// AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);
 	if (isset($_POST['submit_eleve'])) {
+		$classe_data = json_decode($_POST['classe']);
 		$nom = array_key_exists('nom', $_POST) ? $_POST['nom'] : null;
 		$prenom = array_key_exists('prenom', $_POST) ? $_POST['prenom'] : null;
 		$date_naissance = array_key_exists('date_naissance', $_POST) ? $_POST['date_naissance'] : null;
 		$matricule = array_key_exists('matricule', $_POST) ? $_POST['matricule'] : null;
 		$numero = array_key_exists('numero', $_POST) ? $_POST['numero'] : null;
 		$date_inscription = array_key_exists('date_inscription', $_POST) ? $_POST['date_inscription'] : null;
-		$classe = array_key_exists('classe', $_POST) ? $_POST['classe'] : null;
-		$classe_categorie = array_key_exists('classe_categorie', $_POST) ? $_POST['classe_categorie'] : null;
-		$classe_mention = array_key_exists('classe_mention', $_POST) ? $_POST['classe_mention'] : null;
-		$session = array_key_exists('session', $_POST) ? $_POST['session'] : null;
 		$adresse = array_key_exists('adresse', $_POST) ? $_POST['adresse'] : null;
 		$eleve_photo = null;
 
@@ -135,25 +159,28 @@
 					'eleve_adresse' => $adresse,
 					'eleve_date_naissance' => $date_naissance,
 					'eleve_date_inscription' => $date_inscription,
-					'eleve_classe_param_fk' => $classe,
-					'eleve_classe_cat_param_fk' => $classe_categorie,
-					'eleve_classe_mention_param_fk' => $classe_mention,
-					'eleve_classe_session_param_fk' => $session
 				];
 				if (!array_key_exists('error', $_SESSION)) {
-					$doublon = $db->get_query("select count(eleve_id) as doublon from eleves where eleve_matricule='$matricule'")[0]['doublon'];
 					// CREATION
 					if (empty($_POST['id'])) {
-						if ($doublon > 0) {
-							$_SESSION['error']['error_matricule'] = "Ce numéro matricule existe déjà.";
-							$data_eleve = (object) $data;
-						} else {
-							if ($eleve_photo) {
-								move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FICHIER
+						if ($eleve_photo) {
+							move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FICHIER
+						}
+						if ($db->insert('eleves', $data)) {
+							$eleve_id = $db->lastInsertId();
+							add_history("Création élèves ". $data['eleve_nom']);
+							foreach ($classe_data as $i => $classe) {
+								$c = [
+									'classe_id' => null,
+									'classe_categorie' => $classe->classe_categorie,
+									'classe_param_fk' => $classe->classe_param_fk,
+									'classe_mention_param_fk' => $classe->classe_mention_param_fk,
+									'classe_session_param_fk' => $classe->classe_session_param_fk,
+									'classe_eleve_fk' => $eleve_id
+								];
+								$db->insert('classes', $c);
 							}
-							if ($db->insert('eleves', $data)) {
-								header('location: ./');
-							}
+							header('location: ./');
 						}
 					} else { // MODIFICATION
 						$data['eleve_id'] = $_POST['id'];
@@ -162,13 +189,28 @@
 							$_SESSION['error']['error_matricule'] = "Ce numéro matricule existe déjà.";
 							$data_eleve = (object) $data;
 						} else {
+							$f = $upload_dir . 'eleves/' . $last_picture;
+							if (file_exists($f)) {
+								unlink($f); // SUPRESSION DE L'ANCIEN PHOTO
+							}
 							if ($eleve_photo) {
-								unlink($upload_dir . 'eleves/' . $last_picture); // SUPRESSION DE L'ANCIEN PHOTO
 								move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FUCHIER
 							}
-							if ($db->update('eleves', $data, ['eleve_id' => $_POST['id']])) {
-								header('location: ./');
+							$db->delete('classes', ['classe_eleve_fk' => $data['eleve_id']]);
+							foreach ($classe_data as $i => $classe) {
+								$c = [
+									'classe_id' => null,
+									'classe_categorie' => $classe->classe_categorie,
+									'classe_param_fk' => $classe->classe_param_fk,
+									'classe_mention_param_fk' => $classe->classe_mention_param_fk,
+									'classe_session_param_fk' => $classe->classe_session_param_fk,
+									'classe_eleve_fk' => $data['eleve_id']
+								];
+								$db->insert('classes', $c);
 							}
+							$db->update('eleves', $data, ['eleve_id' => $_POST['id']]);
+							add_history("Modification élèves ".$data['eleve_nom']);
+							header('location: ./');
 						}
 					}
 				} else {

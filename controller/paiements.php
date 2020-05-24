@@ -3,17 +3,10 @@
 		SELECT 
 			p.*,
 			eleves.*,
-			c_cat.param_description AS classe_cat,
-			me.param_description AS mention,
-			c.param_description classe,
 			t.param_id, t.param_description AS type,
 			m.param_id, m.param_description AS mode
 		FROM paiements AS p
 		JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk
-		JOIN param_divers AS c ON c.param_id=eleves.eleve_classe_param_fk
-		LEFT JOIN param_divers AS c_cat ON eleves.eleve_classe_cat_param_fk=c_cat.param_id
-		LEFT JOIN param_divers AS me ON eleves.eleve_classe_mention_param_fk=me.param_id
-		LEFT JOIN param_divers AS s ON eleves.eleve_classe_session_param_fk=s.param_id
 		JOIN param_divers AS t ON t.param_id=p.paiement_type_paiement_param_fk
 		JOIN param_divers AS m ON m.param_id=p.paiement_mode_paiement_param_fk
 		WHERE 1
@@ -46,10 +39,41 @@
 		}
 
 		$data = $db->get_query($query);
+		foreach ($data as $i => $paiement) {
+			$q = "
+				SELECT 	classes.classe_categorie AS categorie,
+						c.param_description AS classe,
+						m.param_description AS mention,
+						s.param_description AS session
+				FROM classes
+				LEFT JOIN param_divers AS c ON classes.classe_param_fk=c.param_id
+				LEFT JOIN param_divers AS m ON classes.classe_mention_param_fk=m.param_id
+				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
+				WHERE classes.classe_eleve_fk={$paiement['eleve_id']}
+			";
+			$classe = $db->get_query($q);
+			$data[$i]['classe'] = $classe;
+		}
 		header('Content-type: application/json');
 		echo ('{"data":'. json_encode($data) .'}');
 		exit();
 	}
+	/***********************************************/
+	//				AJAX REQUEST
+	/***********************************************/
+	if (isset($_GET['q'])) {
+		require_once '../config/default.php';
+		require_once '../config/database.php';
+		require_once '../helpers/auth.php';
+		is_login($base_url);
+		$db = new database();
+		$q = $_GET['q'];
+		$data = [];
+		header('Content-type: application/json');
+		echo json_encode($data);
+		exit();
+	}
+
 	/***********************************************/
 	//				EXPORT EN PDF
 	/***********************************************/
@@ -126,22 +150,22 @@
 	/***********************************************/
 	//		AJAX SUPRESSION DU PAIEMENT
 	/***********************************************/
-	if (isset($_GET['delete'])) {
-		require_once '../config/default.php';
-		require_once '../config/database.php';
-		require_once '../helpers/auth.php';
-		is_login($base_url);
-		$db = new database();
+	// if (isset($_GET['delete'])) {
+	// 	require_once '../config/default.php';
+	// 	require_once '../config/database.php';
+	// 	require_once '../helpers/auth.php';
+	// 	is_login($base_url);
+	// 	$db = new database();
 
-		if ($db->delete('paiements', ['paiement_id' => $_GET['delete']])) {
-			header('Content-type: application/json');
-			echo ('{ "status": "success" }');
-		} else {
-			header('Content-type: application/json');
-			echo ('{ "status": "error" }');
-		}
-		exit();
-	}
+	// 	if ($db->delete('paiements', ['paiement_id' => $_GET['delete']])) {
+	// 		header('Content-type: application/json');
+	// 		echo ('{ "status": "success" }');
+	// 	} else {
+	// 		header('Content-type: application/json');
+	// 		echo ('{ "status": "error" }');
+	// 	}
+	// 	exit();
+	// }
 
 	/***********************************************/
 	//				ACTION PAR DEFAUT
@@ -163,16 +187,14 @@
 		$data_paiement = (object) $db->get_query( $query . ' AND paiement_id=' . $_GET['id'])[0];
 	}
 
-	$all_eleves = $db->get_query('select eleve_id, eleve_matricule from eleves');
-	$all_types = $db->get_query("select param_id, param_description from param_divers where param_table='type_paiement'"); 
-	$all_modes = $db->get_query("select param_id, param_description from param_divers where param_table='mode_paiement'");
-	$all_classe = $db->get_query("select * from param_divers where param_table='classe'");
-	$all_classe_cat = $db->get_query("select * from param_divers where param_table='categorie_classe'");
-	$all_mention = $db->get_query("select * from param_divers where param_table='mention'");
-	$all_session = $db->get_query("select * from param_divers where param_table='categorie_session'");
-	$all_status = $db->get_query("select * from param_divers where param_table='status_paiement'");
-	$status_complet_id = $db->get_query("select param_id from param_divers where param_sigle='paiement_complet'")[0]['param_id'];
-	$changement_classe_id = $db->get_query("select param_id from param_divers where param_sigle='changement_de_classe'")[0]['param_id'];
+	$all_eleves = $db->get_query("SELECT eleve_id, eleve_nom, eleve_prenom FROM eleves");
+	$all_types = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='type_paiement'"); 
+	$all_modes = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='mode_paiement'");
+	$all_status = $db->get_query("SELECT * FROM param_divers WHERE param_table='status_paiement'");
+	$status_complet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_complet'")[0]['param_id'];
+	$all_paiement_par = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='paiement_par'");
+	$paiement_tranche_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='tranche'")[0]['param_id'];
+	$last_recu = $db->get_query("SELECT MAX(p.paiement_numero_recu) AS last_recu FROM paiements AS p")[0]['last_recu'];
 
 	// AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);
@@ -182,16 +204,17 @@
 		$type_paiement = array_key_exists('type_paiement', $_POST) ? $_POST['type_paiement'] : null;
 		$mode_paiement = array_key_exists('mode_paiement', $_POST) ? $_POST['mode_paiement'] : null;
 		$description = array_key_exists('description', $_POST) ? $_POST['description'] : null;
-		$classe = array_key_exists('classe', $_POST) ? $_POST['classe'] : null;
-		$classe_categorie = array_key_exists('classe_categorie', $_POST) ? $_POST['classe_categorie'] : null;
-		$classe_mention = array_key_exists('classe_mention', $_POST) ? $_POST['classe_mention'] : null;
 		$montant_total = array_key_exists('montant_total', $_POST) ? $_POST['montant_total'] : null;
 		$montant_payer = array_key_exists('montant_payer', $_POST) ? $_POST['montant_payer'] : null;
 		$status_paiement = array_key_exists('status_paiement', $_POST) ? $_POST['status_paiement'] : null;
+		$numero_recu = array_key_exists('numero_recu', $_POST) ? $_POST['numero_recu'] : null;
+		$nc = array_key_exists('nc', $_POST) ? $_POST['nc'] : null;
+		$nom_eleve = array_key_exists('nom_eleve', $_POST) ? $_POST['nom_eleve'] : null;
+		$num_tranche = array_key_exists('num_tranche', $_POST) ? $_POST['num_tranche'] : null;
 		$eleve_id = '';
 
 		foreach ($all_eleves as $i => $eleve) {
-			if ($matricule == $eleve['eleve_matricule']) {
+			if ($nom_eleve == $eleve['eleve_nom']." ". $eleve['eleve_prenom']) {
 				$eleve_id = $eleve['eleve_id'];
 			}
 		}
@@ -217,8 +240,11 @@
 			'paiement_id' => '',
 			'paiement_montant' => $montant,
 			'paiement_total' => $montant,
+			'paiement_nc' => $nc,
+			'paiement_num_tranche' => $num_tranche,
 			'paiement_eleve_fk' => $eleve_id,
 			'paiement_status_param_fk' => $status_paiement,
+			'paiement_numero_recu' => $numero_recu,
 			'paiement_type_paiement_param_fk' => $type_paiement,
 			'paiement_mode_paiement_param_fk' => $mode_paiement
 		];
@@ -234,27 +260,17 @@
 		$data_paiement->paiement_status_param_fk = $status_paiement;
 		
 		if (!array_key_exists('error', $_SESSION)) {
-
-			if ($type_paiement == $changement_classe_id) {
-				$data_eleve = [
-					'eleve_classe_param_fk' => $classe,
-					'eleve_classe_cat_param_fk' => $classe_categorie,
-					'eleve_classe_mention_param_fk' => $classe_mention
-				];
-				$db->update('eleves', $data_eleve, ['eleve_id' => $eleve_id]);
-			}
-
 			// CREATION
 			if (empty($_POST['id'])) {
 				$data['paiement_date_depot'] = date("Y-m-d H:i:s");
 				if ($db->insert('paiements', $data)) {
+					add_history("Création paiement de ". $data['paiement_montant']);
 					header('location: ./');
 				}
 			} else { // MODIFICATION
 				$data['paiement_id'] = $_POST['id'];
-				if ($db->update('paiements', $data, ['paiement_id' => $_POST['id']])) {
-					header('location: ./');
-				}
+				$db->update('paiements', $data, ['paiement_id' => $_POST['id']]);
+				header('location: ./');
 			}
 		}
 	}

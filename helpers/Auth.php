@@ -11,7 +11,12 @@
 			JOIN utilisateurs AS u ON u.utilisateur_groupe_fk=g.groupe_id
 			WHERE u.utilisateur_id=$uid AND m.menu_nom='$menu'
 		";
-		$result = $db->get_query($query)[0]['privilege_is_active'];
+		$user = $db->get_query($query);
+		if (empty($user)) {
+			unset($_SESSION['uid']);
+			unset($_SESSION['pseudo']);
+		}
+		$result = $user[0]['privilege_is_active'];
 		return $result == 1;
 	}
 
@@ -34,4 +39,18 @@
 			header("location: $base_url/pages/login");
 			exit();
 		}
+	}
+	
+	function add_history($description) {
+		$db = new database();
+		$data = [
+			'historique_id' => '',
+			'historique_description' => $description,
+			'historique_utilisateur' => $_SESSION['pseudo']
+		];
+		$db->insert('historiques', $data);
+	}
+
+	function format_money($number) {
+		return number_format($number, 0, ',', ' '). " Ar";
 	}

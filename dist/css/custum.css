@@ -75,3 +75,7 @@ table#JodataTable th {
 table#JodataTable {
     width: 100%;
 }
+
+.swal2-popup {
+    font-size: 0.8rem !important;
+}

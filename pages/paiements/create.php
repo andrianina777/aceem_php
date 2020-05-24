@@ -25,17 +25,68 @@
           <div class="row form-group">
             <div class="col-sm-6">
               <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-9 d-flex">
+                  <select name="paiement_par" id="paiement_par" class="form-control form-control-sm">
+                    <?php foreach ($all_paiement_par as $i => $paiement_par):
+                      $selected = isset($data_paiement) && $data_paiement->paiement_par_param_fk==$paiement_par['param_id'] ? 'selected' :'';
+                    ?>
+                      <option value="<?=$paiement_par['param_id']?>" <?=$selected?>><?=$paiement_par['param_description']?></option>
+                    <?php endforeach; ?>
+                  </select>
+                  <input type="number" name="num_tranche" id="num_tranche" min="0" class="form-control form-control-sm" placeholder="numéro du tranche">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <div class="row">
                 <div class="col-sm-3">
-                  <label for="nc">Matricule<strong class="text-danger">*</strong></label>
+                  <label for="nc">NC<strong class="text-danger">*</strong></label>
                 </div>
                 <div class="col-sm-9">
-                  <input name="matricule" list="all_matricule" value="<?= $data_paiement ? $data_paiement->eleve_matricule :'' ?>" class="form-control form-control-sm" placeholder="Matricule">
-                  <datalist id="all_matricule">
+                  <input type="text" name="nc" id="nc" class="form-control form-control-sm" placeholder="NC">
+                  <div class="text-danger" id="error_nc"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="nc">Nom de l'élève<strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-9">
+                  <input name="nom_eleve" id="nom_eleve" list="all_eleves" class="form-control form-control-sm" placeholder="Nom et prénom">
+                  <datalist id="all_eleves">
                     <?php foreach ($all_eleves as $i => $eleve): ?>
-                      <option value="<?=$eleve['eleve_matricule']?>">
+                      <option value="<?=$eleve['eleve_nom']?> <?=$eleve['eleve_prenom']?>">
                     <?php endforeach; ?>
                   </datalist>
                   <div class="text-danger" id="error_matricule"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="nc">Numéro reçu<strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-9">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <input name="numero_recu" id="numero_recu" type="number" min="0" class="form-control form-control-sm" placeholder="N° reçu">
+                      <div class="text-danger" id="error_numero_recu"></div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label>Dernière numéro:</label>
+                    </div>
+                    <div class="col-sm-2"><?=$last_recu?></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -110,66 +161,6 @@
               </div>
             </div>
           </div>
-          <div class="row form-group changement_classe">
-            <div class="col-sm-6">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="classe">Classe<strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <select id="classe" name="classe" class="form-control form-control-sm">
-                        <?php foreach ($all_classe as $i => $classe):
-                          $selected = isset($data_paiement) && $data_paiement->eleve_classe_param_fk==$classe['param_id'] ? 'selected' :'';
-                        ?>
-                          <option value="<?=$classe['param_id']?>" <?=$selected?>><?=$classe['param_description']?></option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                    <div class="col-sm-4">
-                      <select name="classe_categorie" class="form-control form-control-sm">
-                        <option value="-1">Aucun</option>
-                        <?php foreach ($all_classe_cat as $i => $cat):
-                          $selected = isset($data_paiement) && $data_paiement->eleve_classe_cat_param_fk==$cat['param_id'] ? 'selected' :'';
-                        ?>
-                          <option value="<?=$cat['param_id']?>" <?=$selected?>><?=$cat['param_description']?></option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                    <div class="col-sm-4">
-                      <select name="classe_mention" class="form-control form-control-sm">
-                        <option value="-1">Aucun</option>
-                        <?php foreach ($all_mention as $i => $mention):
-                          $selected = isset($data_paiement) && $data_paiement->eleve_classe_mention_param_fk==$mention['param_id'] ? 'selected' :'';
-                        ?>
-                          <option value="<?=$mention['param_id']?>" <?=$selected?>><?=$mention['param_description']?></option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row form-group changement_classe">
-            <div class="col-sm-6">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="session">Session<strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <select name="session" id="session" class="form-control form-control-sm">
-                    <?php foreach ($all_session as $i => $session):
-                      $selected = isset($data_paiement) && $data_paiement->eleve_classe_session_param_fk==$session['param_id'] ? 'selected' :'';
-                    ?>
-                      <option value="<?=$session['param_id']?>" <?=$selected?>><?=$session['param_description']?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row form-group">
             <div class="col-sm-6">
               <div class="row">
@@ -216,8 +207,8 @@
   ?>
 
   $(document).ready(() => {
-    $('.changement_classe').hide();
     $('.type_partiel').hide();
+    $('#num_tranche').hide();
     <?php if (isset($data_paiement)): ?>
       <?php if ($data_paiement->paiement_status_param_fk == $status_complet_id): ?>
         $('.type_complet').show();
@@ -226,12 +217,13 @@
         $('.type_complet').hide();
         $('.type_partiel').show();
       <?php endif; ?>
-    <?php endif; ?>
-    <?php if (isset($data_paiement) && $data_paiement->paiement_type_paiement_param_fk == $changement_classe_id): ?>
-      $('.changement_classe').show();
+      <?php if ($data_paiement->paiement_par_param_fk == $paiement_tranche_id): ?>
+        $('#num_tranche').show();
+      <?php else: ?>
+        $('#num_tranche').hide();
+      <?php endif; ?>
     <?php endif; ?>
   })
-
 
   $('#status_paiement').change(() => {
     if ($('#status_paiement').val() == <?=$status_complet_id?>) {
@@ -242,12 +234,11 @@
       $('.type_partiel').show('slow');
     }
   })
-
-  $('#type_paiement').change(() => {
-    if ($('#type_paiement').val() == <?=$changement_classe_id?>) {
-      $('.changement_classe').show('slow');
+  $('#paiement_par').change(() => {
+    if ($('#paiement_par').val() == <?=$paiement_tranche_id?>) {
+      $('#num_tranche').show('fast');
     } else {
-      $('.changement_classe').hide('slow');
+      $('#num_tranche').hide('fast');
     }
   })
 </script>
