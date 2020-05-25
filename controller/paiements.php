@@ -192,6 +192,7 @@
 	$all_modes = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='mode_paiement'");
 	$all_status = $db->get_query("SELECT * FROM param_divers WHERE param_table='status_paiement'");
 	$status_complet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_complet'")[0]['param_id'];
+	$status_dpcomplet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_dpcomplet'")[0]['param_id'];
 	$all_paiement_par = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='paiement_par'");
 	$paiement_tranche_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='tranche'")[0]['param_id'];
 	$last_recu = $db->get_query("SELECT MAX(p.paiement_numero_recu) AS last_recu FROM paiements AS p")[0]['last_recu'];
@@ -223,7 +224,7 @@
 			$_SESSION['error']['error_matricule'] = "Aucun élève n'a ce n° matricule.";
 		}
 
-		if ($status_complet_id == $status_paiement) {
+		if ($status_complet_id == $status_paiement || $status_dpcomplet_id == $status_paiement) {
 			if ((int) $montant == 0) {
 				$_SESSION['error']['error_montant'] = "Veuillez insérer la montant du paiement.";
 			}
@@ -249,7 +250,7 @@
 			'paiement_mode_paiement_param_fk' => $mode_paiement
 		];
 
-		if ($status_complet_id != $status_paiement) {
+		if ($status_complet_id != $status_paiement && $status_dpcomplet_id != $status_paiement) {
 			$data['paiement_montant'] = $montant_payer;
 			$data['paiement_total'] = $montant_total;
 		}

@@ -226,7 +226,7 @@
   })
 
   $('#status_paiement').change(() => {
-    if ($('#status_paiement').val() == <?=$status_complet_id?>) {
+    if ($('#status_paiement').val() == <?=$status_complet_id?> || $('#status_paiement').val() == <?=$status_dpcomplet_id?>) {
       $('.type_complet').show('slow');
       $('.type_partiel').hide('slow');
     } else {

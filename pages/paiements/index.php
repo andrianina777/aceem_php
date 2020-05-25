@@ -95,6 +95,7 @@
                 <th>Reste</th>
                 <th>Type</th>
                 <th>Mode</th>
+                <th>N°tranche</th>
                 <th>Matricule</th>
                 <th>Nom et prénom</th>
                 <th>NC</th>
@@ -108,6 +109,7 @@
                 <td align="right" id="total_total"></td>
                 <td align="right" id="total_payer"></td>
                 <td align="right" id="total_reste"></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -228,8 +230,11 @@
 							return `${data.mode}`;
 						} },
 						{ "data": (data, type, full) => {
-							return `${data.eleve_matricule}`;
+							return `${data.paiement_num_tranche}`;
 						} },
+            { "data": (data, type, full) => {
+              return `${data.eleve_matricule}`;
+            } },
             { "data": (data, type, full) => {
               return `${data.eleve_nom} ${data.eleve_prenom}`;
             } },
