@@ -56,7 +56,7 @@
             <div class="col-sm-6">
               <div class="row">
                 <div class="col-sm-3">
-                  <label for="nc">Nom de l'élève<strong class="text-danger">*</strong></label>
+                  <label for="nom_eleve">Nom de l'élève<strong class="text-danger">*</strong></label>
                 </div>
                 <div class="col-sm-9">
                   <input name="nom_eleve" id="nom_eleve" list="all_eleves" class="form-control form-control-sm" placeholder="Nom et prénom">
@@ -65,7 +65,20 @@
                       <option value="<?=$eleve['eleve_nom']?> <?=$eleve['eleve_prenom']?>">
                     <?php endforeach; ?>
                   </datalist>
-                  <div class="text-danger" id="error_matricule"></div>
+                  <div class="text-danger" id="error_nom_eleve"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="date_recu">Date du reçu<strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-9">
+                  <input name="date_recu" id="date_recu" type="date" class="form-control form-control-sm">
+                  <div class="text-danger" id="error_date_recu"></div>
                 </div>
               </div>
             </div>

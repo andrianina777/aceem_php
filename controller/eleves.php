@@ -1,7 +1,7 @@
 <?php
 	$query = "SELECT e.* FROM eleves AS e";
 	/***********************************************/
-	//		AJAX LISTE DE TOUT LES UTILISATEURS
+	//		AJAX LISTE DE TOUT LES ELEVES
 	/***********************************************/
 	if (isset($_GET['list']) && $_GET['list'] == 0) {
 		require_once '../config/default.php';
@@ -9,11 +9,21 @@
 		require_once '../helpers/auth.php';
 		is_login($base_url);
 		$db = new database();
+		if (isset($_GET['type_recherche'])) {
+			switch ($_GET['type_recherche']) {
+				case 'AVEC_DOUBLON':
+					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)>1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+				break;
+				case 'SANS_DOUBLON':
+					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)=1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+					break;
+			}	
+		}
 
 		$data = $db->get_query($query);
 		foreach ($data as $i => $eleve) {
 			$q = "
-				SELECT 	classes.classe_categorie AS categorie,
+				SELECT  classes.classe_categorie AS categorie,
 						c.param_description AS classe,
 						m.param_description AS mention,
 						s.param_description AS session
@@ -23,6 +33,7 @@
 				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
 				WHERE classes.classe_eleve_fk={$eleve['eleve_id']}
 			";
+
 			$classe = $db->get_query($q);
 			$data[$i]['classe'] = $classe;
 		}
@@ -33,7 +44,7 @@
 
 
 	/***********************************************/
-	//		AJAX SUPPRESSION D'UN UTILISATEUR
+	//		AJAX SUPPRESSION D'UN ELEVE
 	/***********************************************/
 	if (isset($_GET['delete'])) {
 		require_once '../config/default.php';
@@ -77,7 +88,7 @@
 
 	$data_eleve = null;
 	$classe_list = [];
-	$classe_data = '';
+	$classe_all_data = '';
 	if (isset($_GET['id'])) {
 		$eleve_id = $_GET['id'];
 		$data_eleve = (object) $db->get_query( $query .' where e.eleve_id='. $eleve_id)[0];
@@ -95,7 +106,7 @@
 		";
 		$classe_list = $db->get_query($q);
 		$c = $db->get_query("SELECT classe_id AS id, classe_param_fk, classe_categorie, classe_mention_param_fk, classe_session_param_fk FROM classes WHERE classe_eleve_fk=$eleve_id");
-		$classe_data = json_encode($c);
+		$classe_all_data = json_encode($c);
 	}
 
 	$all_classe = $db->get_query("select * from param_divers where param_table='classe' order by param_ordre");

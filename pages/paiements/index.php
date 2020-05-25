@@ -100,7 +100,7 @@
                 <th>Nom et prénom</th>
                 <th>NC</th>
                 <th>Classe (Session)</th>
-                <!-- <th>Action</th> -->
+                <th>Action</th>
               </tr>
             </thead>
             <tfoot>
@@ -109,6 +109,7 @@
                 <td align="right" id="total_total"></td>
                 <td align="right" id="total_payer"></td>
                 <td align="right" id="total_reste"></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -249,6 +250,15 @@
               }
               return html;
 						} },
+            {
+              "data": (data, type, full) => {
+                return `
+                  <div class="flex content-space">
+                    <a href="javascript:void(0)" onclick="onViewEleve(${data.paiement_id})">Aperçu</a>
+                  </div>
+                `;
+              }
+            }
             /*{
               "data": function(data, type, full) {
                   let btn = `
@@ -267,13 +277,47 @@
     			{ "targets": 2, "className": "text-right" },
     			{ "targets": 3, "className": "text-right" },
     			{ "targets": 6, "className": "text-center", "width": "5%" },
-    			// { "targets": 10, "className": "text-center", "width": "2%" },
+    			{ "targets": 11, "className": "text-center", "width": "2%" },
         ],
          "initComplete": function (settings, json) {
             setTotal();
           }
       });
     init_page_info()
+  }
+  function onViewEleve(paiement_id) {
+    $.ajax({
+      url: `<?= $base_url ?>/controller/paiements.php`,
+      type: 'get',
+      data: { list: 0, paiement_id },
+      success: (res) => {
+        data = res.data[0];
+        console.log(data);
+        let html = `
+        <div class="container" align="left">
+        <div class="row">
+          <div class="col-sm-4">
+            <img src="<?=$base_url?>/resources/eleves/${data.eleve_photo}" height="80px">
+          </div>
+          <div class="col-sm-8" align="right">
+            <h4>${data.eleve_nom} ${data.eleve_prenom}</h4>
+          </div>
+        </div>
+          <div>Numero matricule: ${data.eleve_matricule}</div><hr>
+          <div>Montant payer: ${format_montant(data.paiement_montant)} Ar</div>
+        </div>
+        `;
+        Swal.fire({
+          html,
+          showCloseButton: true,
+          showCancelButton: false,
+          showConfirmButton: false,
+          padding: '2rem',
+          width: '50%',
+        })
+      }
+    })
+    
   }
 /*
   function delete_paiement(paiement_id) {

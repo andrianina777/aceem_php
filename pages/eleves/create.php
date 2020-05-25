@@ -188,8 +188,8 @@
 <script>
   DATA_CLASSE = [];
   $(document).ready(() => {
-    <?php if ($classe_data != ''): ?>
-      DATA_CLASSE = JSON.parse('<?=$classe_data?>');
+    <?php if ($classe_all_data != ''): ?>
+      DATA_CLASSE = JSON.parse('<?=$classe_all_data?>');
     <?php endif ?>
   })
 

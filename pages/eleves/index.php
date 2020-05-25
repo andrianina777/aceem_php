@@ -29,6 +29,19 @@
               <input type="text" id="search" class="form-control form-control-sm">
             </div>
           </div>
+          <div class="row form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+              <label for="description">Type de recherche :</label>
+            </div>
+            <div class="col-md-5">
+              <select id="type_recherche" class="form-control form-control-sm">
+                <option value="TOUT">Tout</option>
+                <option value="SANS_DOUBLON">Sans doublon</option>
+                <option value="AVEC_DOUBLON">Avec doublon</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
         
@@ -64,6 +77,13 @@
   $(document).ready(function() {
     init_table();
   } );
+
+  $('#type_recherche').change((e) => {
+    let v = e.target.value;
+    table.destroy();
+    init_table(`<?= $base_url ?>/controller/eleves.php?list=0&type_recherche=${v}`)
+    
+  })
 
   $('#JoPaginate').change(() => {
     $('#JodataTable').DataTable().page.len($('#JoPaginate').val()).draw();

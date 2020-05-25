@@ -38,6 +38,10 @@
 			}
 		}
 
+		if (isset($_GET['paiement_id'])) {
+			$query .= " AND p.paiement_id=". $_GET['paiement_id'];
+		}
+
 		$data = $db->get_query($query);
 		foreach ($data as $i => $paiement) {
 			$q = "
@@ -207,8 +211,10 @@
 		$description = array_key_exists('description', $_POST) ? $_POST['description'] : null;
 		$montant_total = array_key_exists('montant_total', $_POST) ? $_POST['montant_total'] : null;
 		$montant_payer = array_key_exists('montant_payer', $_POST) ? $_POST['montant_payer'] : null;
+		$paiement_par = array_key_exists('paiement_par', $_POST) ? $_POST['paiement_par'] : null;
 		$status_paiement = array_key_exists('status_paiement', $_POST) ? $_POST['status_paiement'] : null;
 		$numero_recu = array_key_exists('numero_recu', $_POST) ? $_POST['numero_recu'] : null;
+		$date_recu = array_key_exists('date_recu', $_POST) ? $_POST['date_recu'] : null;
 		$nc = array_key_exists('nc', $_POST) ? $_POST['nc'] : null;
 		$nom_eleve = array_key_exists('nom_eleve', $_POST) ? $_POST['nom_eleve'] : null;
 		$num_tranche = array_key_exists('num_tranche', $_POST) ? $_POST['num_tranche'] : null;
@@ -220,10 +226,17 @@
 			}
 		}
 
-		if ($eleve_id == '') {
-			$_SESSION['error']['error_matricule'] = "Aucun élève n'a ce n° matricule.";
+		if ($date_recu == '') {
+			$_SESSION['error']['error_date_recu'] = "Ce champs est obligatoire.";
 		}
 
+		if ($eleve_id == '') {
+			$_SESSION['error']['error_nom_eleve'] = "Cette élève n'existe pas.";
+		}
+
+		if ((int) $numero_recu == 0) {
+			$_SESSION['error']['error_numero_recu'] = "Veuillez insérer nombre.";
+		}
 		if ($status_complet_id == $status_paiement || $status_dpcomplet_id == $status_paiement) {
 			if ((int) $montant == 0) {
 				$_SESSION['error']['error_montant'] = "Veuillez insérer la montant du paiement.";
@@ -245,7 +258,9 @@
 			'paiement_num_tranche' => $num_tranche,
 			'paiement_eleve_fk' => $eleve_id,
 			'paiement_status_param_fk' => $status_paiement,
+			'paiement_par_param_fk' => $status_paiement,
 			'paiement_numero_recu' => $numero_recu,
+			'paiement_date_recu' => $date_recu,
 			'paiement_type_paiement_param_fk' => $type_paiement,
 			'paiement_mode_paiement_param_fk' => $mode_paiement
 		];
