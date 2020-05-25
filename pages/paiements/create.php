@@ -40,6 +40,21 @@
               </div>
             </div>
           </div>
+          <!--modif_ajout_num_reçu-->
+          <div class="row form-group type_complet">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="montant">Numéro reçu<strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="number" name="recu" value="<?= $data_paiement ? $data_paiement->paiement_recu :'' ?>" id="recu" class="form-control form-control-sm" placeholder="Numéro reçu">
+                  <div class="text-danger" id="error_recu"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row form-group">
             <div class="col-sm-6">
               <div class="row">
