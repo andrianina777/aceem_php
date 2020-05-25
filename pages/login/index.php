@@ -36,7 +36,11 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Connectez-vous pour créer une session</p>
+      <?php if (array_key_exists('error_loggin', $_SESSION)): ?>
+        <p class="login-box-msg text-danger"><?=@$_SESSION['error_loggin']?></p>
+      <?php else: ?>
+        <p class="login-box-msg">Connectez-vous pour créer une session</p>
+      <?php endif ?>
 
       <form method="post">
         <div class="input-group mb-3">

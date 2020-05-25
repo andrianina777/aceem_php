@@ -30,6 +30,7 @@
                 </div>
                 <div class="col-sm-9">
                   <input type="text" name="nom" value="<?= $data_user ? $data_user->utilisateur_nom :'' ?>" id="nom" class="form-control form-control-perso" placeholder="Nom">
+                  <div class="text-danger" id="error_nom"></div>
                 </div>
               </div>
             </div>
@@ -42,6 +43,7 @@
                 </div>
                 <div class="col-sm-9">
                   <input type="text" name="pseudo" value="<?= $data_user ? $data_user->utilisateur_pseudo :'' ?>" id="pseudo" class="form-control form-control-perso" placeholder="Pseudo">
+                  <div class="text-danger" id="error_pseudo"></div>
                 </div>
               </div>
             </div>
@@ -54,6 +56,7 @@
                 </div>
                 <div class="col-sm-9">
                   <input type="email" name="email" value="<?= $data_user ? $data_user->utilisateur_email :'' ?>" id="email" class="form-control form-control-perso" placeholder="ex@email.com">
+                  <div class="text-danger" id="error_email"></div>
                 </div>
               </div>
             </div>
@@ -93,4 +96,14 @@
     </div>
   </div>
 </div>
+<script>
+   <?php
+    if (array_key_exists('error', $_SESSION)) {
+      $error = $_SESSION['error'];
+      foreach ($error as $key => $value) {
+        echo "$('#". $key ."').html(`". $value ."`);";
+      }
+    }
+  ?>
+</script>
 <?php require_once '../../layout/footer.php'; ?>

@@ -94,7 +94,7 @@
                   let btn = `
                   <div class="flex content-space">
                     <a href="<?=$base_url?>/pages/utilisateurs/create.php?id=${data.utilisateur_id}"><i class="fa fa-edit"></i></a>
-                    <a href="javascript:void(0)" onclick="delete_param(${data.utilisateur_id})"><i class="fa fa-trash text-danger"></i></a>
+                    <a href="javascript:void(0)" onclick="delete_param(${data.utilisateur_id}, '${data.utilisateur_pseudo}')"><i class="fa fa-trash text-danger"></i></a>
                   </div>
                   `;
                   return btn;
@@ -108,7 +108,7 @@
     init_page_info()
   }
 
-  function delete_param(user_id) {
+  function delete_param(user_id, utilisateur_pseudo) {
     Swal.fire({
       title: 'Êtes-vous sûre de le supprimer?',
       text: `L'action est irreversible.`,
@@ -122,7 +122,8 @@
       if (result.value) {
         $.ajax({
           url: '<?=$base_url?>/controller/utilisateurs.php?delete='+ user_id,
-          type: 'post',
+          type: 'get',
+          data: {utilisateur_pseudo},
           success: (r) => {
             if (r.status === 'success') {
               table.destroy();

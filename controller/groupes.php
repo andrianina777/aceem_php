@@ -28,6 +28,7 @@
 		$db = new database();
 
 		if ($db->delete('groupes', ['groupe_id' => $_GET['delete']])) {
+			add_history("Suppression groupe ". $_GET['groupe_nom']);
 			header('Content-type: application/json');
 			echo ('{ "status": "success" }');
 		} else {
@@ -76,7 +77,7 @@
 			// CREATION
 			if (empty($_POST['id'])) {
 				if ($db->insert('groupes', $data)) {
-
+					add_history("Création groupe ". $data['groupe_nom']);
 					$groupe_id = $db->lastInsertId();
 
 					// AJOUT DES PRIVILEGES
@@ -96,25 +97,24 @@
 				}
 			} else { // MODIFICATION
 				$data['groupe_id'] = $_POST['id'];
-				if ($db->update('groupes', $data, ['groupe_id' => $_POST['id']])) {
-
-					// ENLEVER LES ANCIENS PRIVILEGES
-					$db->delete('privileges', ['privilege_groupe_fk' => $_POST['id']]);
-					// AJOUT DES PRIVILEGES
-					foreach ($all_menus as $key => $menu) {
-						$menu_id = $menu['menu_id'];
-						$is_active = array_key_exists("menu_$menu_id", $_POST) ? 1 : 0;
-						$data_priv = [
-							'privilege_id' => '',
-							'privilege_menu_fk' => $menu_id,
-							'privilege_groupe_fk' => $_POST['id'],
-							'privilege_is_active' => $is_active
-						];
-						$db->insert('privileges', $data_priv);
-					}
-
-					header('location: ./');
+				$db->update('groupes', $data, ['groupe_id' => $_POST['id']]);
+				add_history("Modification groupe ". $data['groupe_nom']);
+				// ENLEVER LES ANCIENS PRIVILEGES
+				$db->delete('privileges', ['privilege_groupe_fk' => $_POST['id']]);
+				// AJOUT DES PRIVILEGES
+				foreach ($all_menus as $key => $menu) {
+					$menu_id = $menu['menu_id'];
+					$is_active = array_key_exists("menu_$menu_id", $_POST) ? 1 : 0;
+					$data_priv = [
+						'privilege_id' => '',
+						'privilege_menu_fk' => $menu_id,
+						'privilege_groupe_fk' => $_POST['id'],
+						'privilege_is_active' => $is_active
+					];
+					$db->insert('privileges', $data_priv);
 				}
+
+				header('location: ./');
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 <?php
-  include '../../controller/groupes.php';
+  include '../../controller/historiques.php';
   require_once '../../layout/header.php'; 
   require_once '../../layout/sidebar.php';
   require_once '../../layout/navbar.php';
@@ -11,9 +11,6 @@
         <div class="container">
           <div class="row">
             <div class="col-md-12">
-              <a href="<?=$base_url?>/pages/groupes/create.php">
-                <button class="btn btn-danger">Créer</button>
-              </a>
               <div class="float-sm-right btn-pagination">
                 <span class="page-start">0</span> - <span class="page-end">0</span> / <span class="page-total">0</span>&nbsp; 
                 <a href="javascript:void(0)" class="fas fa-arrow-alt-circle-left" onclick="pagePrecedent()"></a>
@@ -38,9 +35,9 @@
           <table id="JodataTable" class="table table-hover">
             <thead>
               <tr>
-                <th>Nom</th>
+                <th>Date</th>
                 <th>Description</th>
-                <th valign="middle">Action</th>
+                <th>Utilisateur</th>
               </tr>
             </thead>
           </table>
@@ -48,9 +45,9 @@
       </main>
 
       <select class="form-control form-control-sm col-sm-2" id="JoPaginate">
-        <option value="10" selected>10 affichés</option>
-        <option value="20">20 affichés</option>
-        <option value="50">50 affichés</option>
+        <option value="10" selected>10/pages</option>
+        <option value="20">20/pages</option>
+        <option value="50">50/pages</option>
       </select>
     </div>
   </div>
@@ -81,63 +78,25 @@
     })
   }
 
-  function init_table(url='<?= $base_url ?>/controller/groupes.php?list=0') {
+  function init_table(url='<?= $base_url ?>/controller/historiques.php?list=0') {
     table = $('#JodataTable').DataTable( {
         "ajax": url,
         "columns": [
-            { "data": "groupe_nom" },
-            { "data": "groupe_description" },
-            {
-              "data": function(data, type, full) {
-                  let btn = `
-                  <div class="flex content-space">
-                    <a href="<?=$base_url?>/pages/groupes/create.php?id=${data.groupe_id}"><i class="fa fa-edit"></i></a>
-                    <a href="javascript:void(0)" onclick="delete_param(${data.groupe_id}, '${data.groupe_nom}')"><i class="fa fa-trash text-danger"></i></a>
-                  </div>
-                  `;
-                  return btn;
-                }
-            }
-        ],
-        'columnDefs': [
-          { "targets": 2, "className": "text-center", "width": "2%" },
+            { "data": (data, type, full) => {
+              return date_formatter(data.historique_date);
+            }},
+            { "data": "historique_description" },
+            { "data": "historique_utilisateur" },
         ]
     } );
     init_page_info()
   }
-
-  function delete_param(groupe_id, groupe_nom) {
-    Swal.fire({
-      title: 'Êtes-vous sûre de le supprimer?',
-      text: `L'action est irreversible.`,
-      confirmButtonText: 'Supprimer',
-      cancelButtonText: 'Annuler',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-    }).then((result) => {
-      if (result.value) {
-        $.ajax({
-          url: '<?=$base_url?>/controller/groupes.php?delete='+ groupe_id,
-          type: 'get',
-          data: {groupe_nom},
-          success: (r) => {
-            if (r.status === 'success') {
-              table.destroy();
-              init_table()
-              Swal.fire('Supprimer', 'Élement supprimer avec succès.', 'success')
-            } else {
-              Swal.fire('Erreur', `Une erreur s'est produit, veuillez réessayer!`, 'error');
-            }
-          },
-          error: (error) => {
-            console.log(error)
-            Swal.fire('Erreur', `Une erreur s'est produit, veuillez réessayer!`, 'error');
-          }
-        })
-      }
-    })
+  function date_formatter(value) {
+    const date = new Date(value);
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    if (!isNaN(date.getDate())) {
+      return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    }
   }
 </script>
 <?php require_once '../../layout/footer.php'; ?>

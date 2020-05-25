@@ -5,7 +5,7 @@ class database
 	private $pdo = null;
 	private $host = 'localhost';
 	private $user = 'root';
-	private $dbname = 'aceem';
+	private $dbname = 'aceem_';
 	private $password = '';
 
 	function __construct()
