@@ -7,6 +7,9 @@
 	require_once '../../config/database.php';
 	require_once '../../config/default.php';
 	session_start();
+	if (isset($_SESSION['uid'])) {
+		header('location: ../dashboard');
+	}
 	unset($_SESSION['error_loggin']);
 	if (isset($_POST['connect'])) {
 		$pseudo = array_key_exists('pseudo', $_POST) ? $_POST['pseudo'] : null;
