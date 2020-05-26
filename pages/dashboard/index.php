@@ -1,8 +1,8 @@
 <?php
-  include '../../controller/dashboard.php';
-  require_once '../../layout/header.php'; 
-  require_once '../../layout/sidebar.php';
-  require_once '../../layout/navbar.php';
+include '../../controller/dashboard.php';
+require_once '../../layout/header.php';
+require_once '../../layout/sidebar.php';
+require_once '../../layout/navbar.php';
 ?>
 <div class="container">
 	<div class="row">
@@ -10,7 +10,7 @@
 	    <!-- small box -->
 	    <div class="small-box bg-info">
 	      <div class="inner">
-	        <h3><?=$in_years?></h3>
+	        <h3><?= $in_years ?></h3>
 
 	        <p>Payer</p>
 	      </div>
@@ -25,7 +25,7 @@
 	    <!-- small box -->
 	    <div class="small-box bg-success">
 	      <div class="inner">
-	        <h3><?=$in_mounth?></h3>
+	        <h3><?= $in_mounth ?></h3>
 
 	        <p>Payer</p>
 	      </div>
@@ -40,7 +40,7 @@
 	    <!-- small box -->
 	    <div class="small-box bg-warning">
 	      <div class="inner">
-	        <h3><?=$in_day?></h3>
+	        <h3><?= $in_day ?></h3>
 
 	        <p>Payer</p>
 	      </div>
@@ -53,23 +53,46 @@
 	  <!-- ./col -->
 	</div>
 	<div class="row">
-		<div class="col-lg-4 col-6"></div>
 	  	<div class="col-lg-4 col-6">
 		    <!-- small box -->
 		    <div class="small-box bg-danger">
 		      <div class="inner">
-		        <h3><?=$deperdition?></h3>
+		        <h3><?= $dep_years ?></h3>
 
 		        <p>Non payer</p>
 		      </div>
 		      <div class="icon">
 		        <i class="ion ion-pie-graph"></i>
 		      </div>
-		      <a href="#" class="small-box-footer">Déperdition</a>
+		      <a href="#" class="small-box-footer">Cette année</a>
 		    </div>
 		 </div>
 	  <!-- ./col -->
-	  <div class="col-lg-4 col-6"></div>
+	  <div class="col-lg-4 col-6">
+		  <div class="small-box bg-danger">
+		      <div class="inner">
+		        <h3><?= $dep_mounth ?></h3>
+
+		        <p>Non payer</p>
+		      </div>
+		      <div class="icon">
+		        <i class="ion ion-pie-graph"></i>
+		      </div>
+		      <a href="#" class="small-box-footer">Ce mois</a>
+		    </div>
+		</div>
+		<div class="col-lg-4 col-6">
+		<div class="small-box bg-danger">
+			<div class="inner">
+			<h3><?= $dep_day ?></h3>
+			<p>Non payer</p>
+			</div>
+			<div class="icon">
+			<i class="ion ion-pie-graph"></i>
+			</div>
+			<a href="#" class="small-box-footer">Aujourd'hui</a>
+		</div>
+	  </div>
 	</div>
 </div>
 <?php require_once '../../layout/footer.php'; ?>

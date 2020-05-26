@@ -30,6 +30,11 @@
 			}
 		}
 
+		if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != -1) {
+			$type_paiement = $_GET['type_paiement'];
+			$query .= " AND p.paiement_type_paiement_param_fk=$type_paiement";
+		}
+
 		if (isset($_GET['date_du']) && isset($_GET['date_au'])) {
 			$date_du = $_GET['date_du'];
 			$date_au = $_GET['date_au'];
@@ -88,6 +93,8 @@
 		require_once '../vendor/autoload.php';
 		is_login($base_url);
 		$db = new database();
+		$titre = "PAIEMENTS";
+		
 		if (isset($_GET['type_recherche'])) {
 			$type_recherche = $_GET['type_recherche'];
 			if ($type_recherche == 'deperdition') {
@@ -96,6 +103,13 @@
 				$query .= " AND p.paiement_montant=p.paiement_total";
 			}
 		}
+
+		if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != -1) {
+			$tp = $_GET['type_paiement'];
+			$query .= " AND p.paiement_type_paiement_param_fk=$tp";
+			$titre = $db->get_query("SELECT param_description FROM param_divers WHERE param_id=$tp")[0]['param_description'];
+		}
+
 		if (isset($_GET['date_du']) && isset($_GET['date_au'])) {
 			$date_du = $_GET['date_du'];
 			$date_au = $_GET['date_au'];
@@ -103,19 +117,90 @@
 				$query .= " AND p.paiement_date_depot BETWEEN '$date_du' AND '$date_au'";
 			}
 		}
+
 		$data = $db->get_query($query);
+
+		foreach ($data as $i => $paiement) {
+			$q = "
+				SELECT 	classes.classe_categorie AS categorie,
+						c.param_description AS classe,
+						m.param_description AS mention,
+						s.param_description AS session
+				FROM classes
+				LEFT JOIN param_divers AS c ON classes.classe_param_fk=c.param_id
+				LEFT JOIN param_divers AS m ON classes.classe_mention_param_fk=m.param_id
+				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
+				WHERE classes.classe_eleve_fk={$paiement['eleve_id']}
+			";
+			$classe = $db->get_query($q);
+			$data[$i]['classe'] = $classe;
+		}
 		setlocale(LC_TIME, "fr_FR");
 		$content = "";
 		$mt_total_total = 0;
 		$mt_total_payer = 0;
-		$header = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Reçu</title><style>table {font-family: arial, sans-serif;border-collapse: collapse;width: 100%;}td, th {border: 1px solid #dddddd;text-align: left;padding: 8px;}tr:nth-child(even) {background-color: #f2f2f2;}</style></head><body><div align='left'><img src='". $base_url ."/dist/img/aceem.png' width='100' height='100'></div><table style='width:100%'><tr><th>Date de dépôt</th><th>Total</th><th>Payer</th><th>Reste</th><th>Type</th><th>Mode</th><th>Matricule</th><th>Nom et prénom</th><th>Classe</th></tr><tr>";
+		$monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+		$header = "
+			<!DOCTYPE html>
+				<html>
+					<head>
+						<meta charset='utf-8'>
+						<title>LISTE DES $titre</title>
+						<style>
+							th {
+								background-color: rgba(153, 153, 153, 0.6);
+							}
+							td {
+								padding-left: 7px;
+								padding-right: 7px;
+							}
+							tr:nth-child(even) {
+								background-color: #f2f2f2;
+							}
+							table{
+								font-size: 10px;
+								border-collapse: collapse;
+							}
+							table, th, td {
+								border: 1px solid #555 !important;
+							}
+						</style>
+					</head>
+					<body>
+						<div style='display=flex;'>
+							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
+							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+						</div>
+						<table style='width:100%'>
+							<tr>
+								<th>Date de saisie</th>
+								<th>Total</th>
+								<th>Payer</th>
+								<th>Reste</th>
+								<th>Type</th>
+								<th>Mode</th>
+								<th>Matricule</th>
+								<th>Nom et prénom</th>
+								<th>NC</th>
+								<th>Classe</th>
+								<th>Statut</th>
+							</tr>
+							<tr>
+		";
 		foreach ($data as $i => $value) {
-			$classe = $value['classe'];
-			$classe .= $value['classe_cat'] ? ' ' . $value['classe_cat'] : '';
-			$classe .= $value['mention'] ? ' ' . $value['mention'] : '';
-			$date_depot = strftime("%d / %M / %Y", strtotime($value['paiement_date_depot']));
+			$classe = '';
+			foreach ($value['classe'] as $c) {
+				$cl = $c['classe'];
+				$categorie = $c['categorie'] == 0 ? '' : $c['categorie'];
+				$mention = $c['mention'];
+				$session = $c['session'];
+				$classe .= "$cl $categorie $mention ($session)<br>";
+			}
+			$date_depot = strftime("%d/%M/ %Y", strtotime($value['paiement_date_depot']));
 			$mt_total_total += $value['paiement_total'];
 			$mt_total_payer += $value['paiement_montant'];
+			$reste = $mt_total_total - $mt_total_payer;
+			$statut = $reste == 0 ? 'Payer' : 'Non payer';
 			$content .= "
 				<tr>
 					<td>" . $date_depot . "</td>
@@ -126,25 +211,42 @@
 					<td>" . $value['mode'] . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
 					<td>" . $value['eleve_nom'] . " ". $value['eleve_prenom'] ."</td>
-					<td>". $classe ."</td>
+					<td>". $value['paiement_nc'] ."</td>
+					<td>$classe</td>
+					<td>$statut</td>
 				</tr>
 			";
 		}
 		$content .= "
-				<tr>
-					<td></td>
-					<td>" . $mt_total_total . " Ar</td>
-					<td>" . $mt_total_payer . " Ar</td>
-					<td>" . ($mt_total_total - $mt_total_payer) . " Ar</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td>$mt_total_total Ar</td>
+						<td> $mt_total_payer Ar</td>
+						<td>$reste Ar</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
 			";
-		$footer = "</tr></table><footer><div align='center'>Antananarivo le , 18 Mai 2020 </div></footer></body></html>";
+		$nm = date('m')*1 - 1;
+		$m = $monthNames[$nm];
+		$footer = "
+			</tr>
+		</table>
+		<footer>
+			<br>
+			<div align='right'>Antananarivo le , ".date("d") ." $m ". date('Y') ." </div>
+		</footer>
+	</body>
+</html>";
 		$html = $header . $content . $footer;
+		// die($html);
 		$mpdf = new \Mpdf\Mpdf();
 		$mpdf->WriteHTML($html);
 		$mpdf->Output('liste_paiement.pdf', 'I');
