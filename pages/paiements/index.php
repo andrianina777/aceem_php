@@ -218,7 +218,8 @@
       let libelle = $(this).find("td:nth-child(" +nbr_child+ ")").html();
       if (libelle != undefined) {
         let mt = libelle.split(' Ar')[0];
-        let nbMt = mt.split(' ').join('');
+        let nbMt = mt.split("&nbsp;").join('');
+        nbMt = nbMt.split(" ").join('');
         mt_tmp += parseInt(nbMt);
       }
     });
@@ -269,7 +270,7 @@
 							let html = ``;
               for (var i = 0; i < data.classe.length; i++) {
                 let cl = data.classe[i];
-                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''} (${cl.session})<br>`;
+                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''} (${cl.session!=null?cl.session:'Aucun'})<br>`;
               }
               return html;
 						} },
@@ -330,13 +331,13 @@
           </div>
         </div>
           
-          <div>Mode de paiement :${data.paiement_mode_paiement} </div>
-          <div>status de paiement :${data.paiement_status_paiement}</div>
-          <div>Type de paiement :${data.paiement_type_paiement}</div>
+          <div>Mode de paiement :${data.mode} </div>
+          <div>status de paiement :${data.status}</div>
+          <div>Type de paiement :${data.type}</div>
           <div>Reçu numéro :${data.paiement_numero_recu}</div>
-          <div>Date Reçu : ${data.paiement_date_recu}</div>
-          <div>Date d'inscription :${data.eleve_date_inscription}</div>
-          <div>Observation :${data.paiement_commentaire}</div>
+          <div>Date Reçu : ${date_formatter(data.paiement_date_recu)}</div>
+          <div>Date d'inscription :${date_formatter(data.eleve_date_inscription)}</div>
+          <div>Observation :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
 
           <div>Montant payer: ${format_montant(data.paiement_montant)} Ar</div>
           <div>Reste à payer :</div>
