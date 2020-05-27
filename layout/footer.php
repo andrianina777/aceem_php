@@ -6,12 +6,12 @@
       Aceem Madagascar
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2020 <a href="#">Raims</a>.</strong>
+    <strong>Copyright &copy; 2020 <a href="#"></a>.</strong>
   </footer>
 </div>
 <!-- ./wrapper -->
-
-<!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 </html>
+<!-- Coded by: Jonathan Maheriniaina 👨‍💻 -->
+<!-- ©2020 -->

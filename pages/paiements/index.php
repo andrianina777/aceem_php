@@ -66,6 +66,26 @@
             <div class="col-sm-5">
               <div class="row form-group">
                 <div class="col-sm-5">
+                  <label for="type_recherche">Type de paiement :</label>
+                </div>
+                <div class="col-sm-7">
+                  <select id="type_paiement" class="form-control form-control-sm">
+                    <option value="-1">Tout</option>
+                    <?php foreach ($all_types as $i => $type):
+                      $selected = isset($data_paiement) && $data_paiement->paiement_type_paiement_param_fk==$type['param_id'] ? 'selected' :'';
+                    ?>
+                      <option value="<?=$type['param_id']?>" <?=$selected?>><?=$type['param_description']?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-5">
+              <div class="row form-group">
+                <div class="col-sm-5">
                   <label for="date_du">Date :</label>
                 </div>
                 <div class="col-sm-7">
@@ -141,18 +161,21 @@
 
   $('#btn_search').click(() => {
     let type_recherche = $('#type_recherche').val();
+    let type_paiement = $('#type_paiement').val();
     let filtrer_par = $('#filtrer_par').val();
     let date_du = $('#date_du').val();
     let date_au = $('#date_au').val();
     table.destroy();
-    init_table(`<?= $base_url ?>/controller/paiements.php?list=0&type_recherche=${type_recherche}&filtrer_par=${filtrer_par}&date_du=${date_du}&date_au=${date_au}`)
+    init_table(`<?= $base_url ?>/controller/paiements.php?list=0&type_recherche=${type_recherche}&type_paiement=${type_paiement}&filtrer_par=${filtrer_par}&date_du=${date_du}&date_au=${date_au}`)
   })
 
   $('#btn_print').click(() => {
     let type_recherche = $('#type_recherche').val();
+    let type_paiement = $('#type_paiement').val();
+    let filtrer_par = $('#filtrer_par').val();
     let date_du = $('#date_du').val();
     let date_au = $('#date_au').val();
-    window.open(`<?= $base_url ?>/controller/paiements.php?pdf=0&type_recherche=${type_recherche}&date_du=${date_du}&date_au=${date_au}`)
+    window.open(`<?= $base_url ?>/controller/paiements.php?pdf=0&type_recherche=${type_recherche}&type_paiement=${type_paiement}&filtrer_par=${filtrer_par}&date_du=${date_du}&date_au=${date_au}`)
   })
 
   $('#JoPaginate').change(() => {
