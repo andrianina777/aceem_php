@@ -292,7 +292,7 @@
       data: { list: 0, paiement_id },
       success: (res) => {
         data = res.data[0];
-        console.log(data);
+        console.log(data); 
         let html = `
         <div class="container" align="left">
         <div class="row">
@@ -301,10 +301,26 @@
           </div>
           <div class="col-sm-8" align="right">
             <h4>${data.eleve_nom} ${data.eleve_prenom}</h4>
+            <div><u>Numero matricule</u>: ${data.eleve_matricule}</div> 
+            <h7><u>Adresse </u></h7>:${data.eleve_adresse}<br>
+            <h7><u>Date de naissance</u></h7> : ${data.eleve_date_naissance} <hr>
           </div>
         </div>
-          <div>Numero matricule: ${data.eleve_matricule}</div><hr>
+          
+          <div>Mode de paiement :${data.paiement_mode_paiement} </div>
+          <div>status de paiement :${data.paiement_status_paiement}</div>
+          <div>Type de paiement :${data.paiement_type_paiement}</div>
+          <div>Reçu numéro :${data.paiement_numero_recu}</div>
+          <div>Date Reçu : ${data.paiement_date_recu}</div>
+          <div>Date d'inscription :${data.eleve_date_inscription}</div>
+          <div>Observation :${data.paiement_commentaire}</div>
+
           <div>Montant payer: ${format_montant(data.paiement_montant)} Ar</div>
+          <div>Reste à payer :</div>
+        </div>
+        </div>
+          
+          <div><b>Montant payer:</b> ${format_montant(data.paiement_montant)} Ar</div>
         </div>
         `;
         Swal.fire({

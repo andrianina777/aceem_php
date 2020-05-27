@@ -196,7 +196,7 @@
             <div class="col-sm-6">
               <div class="row">
                 <div class="col-sm-3">
-                  <label for="commentaire">Commentaire</label>
+                  <label for="commentaire">Observation : </label>
                 </div>
                 <div class="col-sm-9">
                   <textarea name="commentaire" id="commentaire" class="form-control"><?= $data_paiement ? $data_paiement->paiement_commentaire :'' ?></textarea>
