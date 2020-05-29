@@ -331,20 +331,20 @@
           </div>
         </div>
           
-          <div>Mode de paiement :${data.mode} </div>
-          <div>status de paiement :${data.status}</div>
-          <div>Type de paiement :${data.type}</div>
-          <div>Reçu numéro :${data.paiement_numero_recu}</div>
-          <div>Date Reçu : ${date_formatter(data.paiement_date_recu)}</div>
-          <div>Date d'inscription :${date_formatter(data.eleve_date_inscription)}</div>
-          <div>Observation :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
+          <div><u><i>Mode de paiement</u></i> :<b>${data.mode} </b></div>
+          <div><u><i>status de paiement</u></i> :<b>${data.status}</b></div>
+          <div><u><i>Type de paiement</u></i> :<b>${data.type}</b></div>
+          <div><u><i>Reçu numéro</u></i> :<b>${data.paiement_numero_recu}</b></div>
+          <div><u><i>Date Reçu</u></i> :<b> ${date_formatter(data.paiement_date_recu)}</b></div>
+          <div><u><i>Date d'inscription</u></i> :<b>${date_formatter(data.eleve_date_inscription)}</b></div>
+          <div><u><i>Observation</u><i> :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
 
-          <div>Montant payer: ${format_montant(data.paiement_montant)} Ar</div>
-          <div>Reste à payer :</div>
+          <div><u><i>Montant payer</u></i>:<b> ${format_montant(data.paiement_montant)} Ar</b></div>
+          
         </div>
         </div>
           
-          <div><b>Montant payer:</b> ${format_montant(data.paiement_montant)} Ar</div>
+          <div><b><u>Montant payer</u></i>:</b> ${format_montant(data.paiement_montant)} Ar</div>
         </div>
         `;
         Swal.fire({
