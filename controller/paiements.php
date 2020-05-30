@@ -310,7 +310,7 @@
 		$montant = array_key_exists('montant', $_POST) ? $_POST['montant'] : null;
 		$type_paiement = array_key_exists('type_paiement', $_POST) ? $_POST['type_paiement'] : null;
 		$mode_paiement = array_key_exists('mode_paiement', $_POST) ? $_POST['mode_paiement'] : null;
-		$description = array_key_exists('description', $_POST) ? $_POST['description'] : null;
+		$description = array_key_exists('commentaire', $_POST) ? $_POST['commentaire'] : null;
 		$montant_total = array_key_exists('montant_total', $_POST) ? $_POST['montant_total'] : null;
 		$montant_payer = array_key_exists('montant_payer', $_POST) ? $_POST['montant_payer'] : null;
 		$paiement_par = array_key_exists('paiement_par', $_POST) ? $_POST['paiement_par'] : null;

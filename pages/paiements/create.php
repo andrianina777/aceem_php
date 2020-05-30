@@ -8,15 +8,19 @@
   main {
     margin-left: 50px; 
   }
+  .resumer:nth-child(1) {
+    text-align: left;
+  }
 </style>
 <div class="content"> <!--Mbola tsy mandeha ilay boutton enregistrer sy annuler amty fa copie coller config io-->
   <div class="container-fluid">
     <div class="container">
-      <form method="post">
+      <form method="post" id="form_paiement">
         <?= $data_paiement ? '<input type="text" name="id" value="'.$data_paiement->paiement_id.'" hidden="true">' :'' ?>
+        <input type="hidden" name="submit_paiement" value="1" hidden="true">
         <div class="row">
           <div class="col-md-2 flex content-space">
-            <button type="submit" name="submit_paiement" class="btn btn-danger"><?= $data_paiement ? 'Modifier' :'Enregister'?></button>&nbsp;  <span>ou</span>&nbsp;  
+            <div id="submit_paiement" class="btn btn-danger"><?= $data_paiement ? 'Modifier' :'Enregister'?></div>&nbsp;  <span>ou</span>&nbsp;  
             <a href="<?=$base_url?>/pages/paiements">Annuler</a>
           </div>
         </div>
@@ -238,6 +242,77 @@
     <?php endif; ?>
   })
 
+  $('#submit_paiement').click(() => {
+    paiement_par = $('#paiement_par option:selected').text();
+    status_paiement = $('#status_paiement option:selected').text();
+    type_paiement = $('#type_paiement option:selected').text();
+    mode_paiement = $('#mode_paiement option:selected').text();
+    num_tranche = $('#num_tranche').val();
+    num_tranche = num_tranche != ''? 'n° '+ num_tranche :''; 
+    commentaire = $('#commentaire').val();
+    montant = $('#montant').val();
+    nc = $('#nc').val();
+    nom_eleve = $('#nom_eleve').val();
+    date_recu = date_formatter($('#date_recu').val());
+    num_recu = $('#numero_recu').val();
+
+    html = `
+      <div class="resumer">
+        <div class="row" style="display:contents;text-align:center;font-weight:bold;">
+          <div class="text-success">${paiement_par} ${num_tranche}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">NC</div>
+          <div class="col-sm-6">${nc}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Nom de l'élève</div>
+          <div class="col-sm-6">${nom_eleve}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Date du reçu</div>
+          <div class="col-sm-6">${date_recu?date_recu:'<div class="text-danger">Non renseigner</div>'}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Numéro reçu</div>
+          <div class="col-sm-6">${num_recu}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Statut du paiement</div>
+          <div class="col-sm-6">${status_paiement}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Montant</div>
+          <div class="col-sm-6">${montant}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Type de paiement</div>
+          <div class="col-sm-6">${type_paiement}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Mode de paiement</div>
+          <div class="col-sm-6">${mode_paiement}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Commentaire</div>
+          <div class="col-sm-6">${commentaire}</div>
+        </div>
+      </div>
+    `;
+
+    Swal.fire({
+      title: 'Résumer',
+      html,
+      showCancelButton: true,
+      cancelButtonText: 'Annuler',
+      confirmButtonText: 'Enregistrer'
+    }).then((r) => {
+      if (r.value) {
+        $('#form_paiement').submit()
+      }
+    })
+  })
+
   $('#status_paiement').change(() => {
     if ($('#status_paiement').val() == <?=$status_complet_id?> || $('#status_paiement').val() == <?=$status_dpcomplet_id?>) {
       $('.type_complet').show('slow');
@@ -254,5 +329,13 @@
       $('#num_tranche').hide('fast');
     }
   })
+
+  function date_formatter(value) {
+    const date = new Date(value);
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    if (!isNaN(date.getDate())) {
+      return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+    }
+  }
 </script>
 <?php require_once '../../layout/footer.php'; ?>
