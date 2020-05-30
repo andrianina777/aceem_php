@@ -4,11 +4,13 @@
 			p.*,
 			eleves.*,
 			t.param_id, t.param_description AS type,
-			m.param_id, m.param_description AS mode
+			m.param_id, m.param_description AS mode,
+			s.param_description AS status
 		FROM paiements AS p
 		JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk
 		JOIN param_divers AS t ON t.param_id=p.paiement_type_paiement_param_fk
 		JOIN param_divers AS m ON m.param_id=p.paiement_mode_paiement_param_fk
+		JOIN param_divers AS s ON s.param_id=p.paiement_status_param_fk
 		WHERE 1
 	";
 	/***********************************************/
@@ -200,7 +202,7 @@
 			$mt_total_total += $value['paiement_total'];
 			$mt_total_payer += $value['paiement_montant'];
 			$reste = $mt_total_total - $mt_total_payer;
-			$statut = $reste == 0 ? 'Payer' : 'Non payer';
+			$statut = $value['status'];
 			$content .= "
 				<tr>
 					<td>" . $date_depot . "</td>

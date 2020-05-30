@@ -218,7 +218,8 @@
       let libelle = $(this).find("td:nth-child(" +nbr_child+ ")").html();
       if (libelle != undefined) {
         let mt = libelle.split(' Ar')[0];
-        let nbMt = mt.split(' ').join('');
+        let nbMt = mt.split("&nbsp;").join('');
+        nbMt = nbMt.split(" ").join('');
         mt_tmp += parseInt(nbMt);
       }
     });
@@ -269,7 +270,7 @@
 							let html = ``;
               for (var i = 0; i < data.classe.length; i++) {
                 let cl = data.classe[i];
-                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''} (${cl.session})<br>`;
+                html += `${cl.classe} ${cl.categorie!=0?cl.categorie:''} ${cl.mention!=null?cl.mention:''} (${cl.session!=null?cl.session:'Aucun'})<br>`;
               }
               return html;
 						} },
@@ -315,7 +316,7 @@
       data: { list: 0, paiement_id },
       success: (res) => {
         data = res.data[0];
-        console.log(data);
+        console.log(data); 
         let html = `
         <div class="container" align="left">
         <div class="row">
@@ -324,10 +325,26 @@
           </div>
           <div class="col-sm-8" align="right">
             <h4>${data.eleve_nom} ${data.eleve_prenom}</h4>
+            <div><u>Numero matricule</u>: ${data.eleve_matricule}</div> 
+            <h7><u>Adresse </u></h7>:${data.eleve_adresse}<br>
+            <h7><u>Date de naissance</u></h7> : ${data.eleve_date_naissance} <hr>
           </div>
         </div>
-          <div>Numero matricule: ${data.eleve_matricule}</div><hr>
-          <div>Montant payer: ${format_montant(data.paiement_montant)} Ar</div>
+          
+          <div><u><i>Mode de paiement</u></i> :<b>${data.mode} </b></div>
+          <div><u><i>status de paiement</u></i> :<b>${data.status}</b></div>
+          <div><u><i>Type de paiement</u></i> :<b>${data.type}</b></div>
+          <div><u><i>Reçu numéro</u></i> :<b>${data.paiement_numero_recu}</b></div>
+          <div><u><i>Date Reçu</u></i> :<b> ${date_formatter(data.paiement_date_recu)}</b></div>
+          <div><u><i>Date d'inscription</u></i> :<b>${date_formatter(data.eleve_date_inscription)}</b></div>
+          <div><u><i>Observation</u><i> :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
+
+          <div><u><i>Montant payer</u></i>:<b> ${format_montant(data.paiement_montant)} Ar</b></div>
+          
+        </div>
+        </div>
+          
+          <div><b><u>Montant payer</u></i>:</b> ${format_montant(data.paiement_montant)} Ar</div>
         </div>
         `;
         Swal.fire({
