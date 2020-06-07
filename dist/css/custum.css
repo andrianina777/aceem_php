@@ -1,3 +1,7 @@
+.hidden {
+    display: none !important;
+}
+
 .search-content {
     background-color: #fbfbfb;
     padding: 15px;

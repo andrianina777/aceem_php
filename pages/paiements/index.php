@@ -56,6 +56,7 @@
                     <option value="tout">Tout</option>
                     <option value="deperdition">Déperdition</option>
                     <option value="payer">Payer</option>
+                    <option value="non_payer">Non payer</option>
                   </select>
                 </div>
               </div>
@@ -66,7 +67,7 @@
             <div class="col-sm-5">
               <div class="row form-group">
                 <div class="col-sm-5">
-                  <label for="type_recherche">Type de paiement :</label>
+                  <label for="type_paiement">Type de paiement :</label>
                 </div>
                 <div class="col-sm-7">
                   <select id="type_paiement" class="form-control form-control-sm">
@@ -116,9 +117,9 @@
                 <th>Type</th>
                 <th>Mode</th>
                 <th>N°tranche</th>
+                <th>Mois</th>
                 <th>Matricule</th>
                 <th>Nom et prénom</th>
-                <th>NC</th>
                 <th>Classe (Session)</th>
                 <th>Action</th>
               </tr>
@@ -219,7 +220,7 @@
       if (libelle != undefined) {
         let mt = libelle.split(' Ar')[0];
         let nbMt = mt.split("&nbsp;").join('');
-        nbMt = nbMt.split(" ").join('');
+        nbMt = nbMt.split(` `).join('');
         mt_tmp += parseInt(nbMt);
       }
     });
@@ -227,6 +228,9 @@
   }
 
   function format_montant(montant) {
+    if (isNaN(montant)) {
+      return '0';
+    }
     let m = parseInt(montant).toLocaleString();
     return m.split(',').join(' ');
   }
@@ -236,35 +240,35 @@
         "ajax": url,
         "columns": [
             { "data": (data, type, full) => {
-							return date_formatter(data.paiement_date_depot);
+							return data.paiement_date_depot !== null ? date_formatter(data.paiement_date_depot) : '-';
 						} },
 						{ "data": (data, type, full) => {
-              return `${format_montant(data.paiement_total)} Ar`;
+              return data.paiement_total !== null ? `${format_montant(data.paiement_total)} Ar` : '-';
 						} },
 						{ "data": (data, type, full) => {
-							return `${format_montant(data.paiement_montant)} Ar`;
+							return data.paiement_montant !== null ? `${format_montant(data.paiement_montant)} Ar` : '-';
 						} },
 						{ "data": (data, type, full) => {
 							let montant = format_montant(data.paiement_total - data.paiement_montant);
 							return `${montant} Ar`;
 						} },
 						{ "data": (data, type, full) => {
-							return `${data.type}`;
+							return data.type !== undefined ? `${data.type}` : '-';
 						} },
 						{ "data": (data, type, full) => {
-							return `${data.mode}`;
+							return data.mode !== undefined ? `${data.mode}` : '-';
 						} },
 						{ "data": (data, type, full) => {
-							return `${data.paiement_num_tranche}`;
+							return data.paiement_num_tranche !== null ? `${data.paiement_num_tranche}` : '-';
+						} },
+						{ "data": (data, type, full) => {
+							return data.paiement_mois !== null ? `${data.paiement_mois}` : '-';
 						} },
             { "data": (data, type, full) => {
               return `${data.eleve_matricule}`;
             } },
             { "data": (data, type, full) => {
               return `${data.eleve_nom} ${data.eleve_prenom}`;
-            } },
-            { "data": (data, type, full) => {
-              return `${data.paiement_nc}`;
             } },
             { "data": (data, type, full) => {
 							let html = ``;
@@ -276,11 +280,11 @@
 						} },
             {
               "data": (data, type, full) => {
-                return `
+                return data.paiement_id !== null ? `
                   <div class="flex content-space">
                     <a href="javascript:void(0)" onclick="onViewEleve(${data.paiement_id})">Aperçu</a>
                   </div>
-                `;
+                ` : '<div class="text-danger">Aucun aperçu</div>';
               }
             }
             /*{
@@ -300,7 +304,7 @@
     			{ "targets": 1, "className": "text-right" },
     			{ "targets": 2, "className": "text-right" },
     			{ "targets": 3, "className": "text-right" },
-    			{ "targets": 6, "className": "text-center", "width": "5%" },
+    			{ "targets": 6, "className": "text-center", "width": "2%" },
     			{ "targets": 11, "className": "text-center", "width": "2%" },
         ],
          "initComplete": function (settings, json) {

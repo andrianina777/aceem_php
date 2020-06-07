@@ -39,19 +39,7 @@
                     <?php endforeach; ?>
                   </select>
                   <input type="number" name="num_tranche" id="num_tranche" min="0" class="form-control form-control-sm" placeholder="numéro du tranche">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-sm-6">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="nc">NC<strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" name="nc" id="nc" class="form-control form-control-sm" placeholder="NC">
-                  <div class="text-danger" id="error_nc"></div>
+                  <input type="text" name="mois" id="mois" min="0" class="form-control form-control-sm" placeholder="mois">
                 </div>
               </div>
             </div>
@@ -324,9 +312,13 @@
   })
   $('#paiement_par').change(() => {
     if ($('#paiement_par').val() == <?=$paiement_tranche_id?>) {
-      $('#num_tranche').show('fast');
+      $('#mois').val('');
+      $('#mois').hide();
+      $('#num_tranche').slideDown();
     } else {
-      $('#num_tranche').hide('fast');
+      $('#num_tranche').val('');
+      $('#num_tranche').hide();
+      $('#mois').slideDown();
     }
   })
 

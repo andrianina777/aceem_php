@@ -97,12 +97,23 @@
             </div>
           </div>
           <div class="row form-group">
-            <div class="col-sm-1">
-              <label for="matricule">Matricule  <strong class="text-danger">*</strong></label>
-            </div>
-            <div class="col-sm-3">
-              <input type="text" name="matricule" value="<?= $data_eleve ? $data_eleve->eleve_matricule :'' ?>" id="matricule" class="form-control form-control-sm " placeholder="Matricule">
-              <div class="text-danger" id="error_matricule"></div>
+            <div class="col-sm-4">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label for="matricule">Matricule  <strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-3">
+                  <input type="text" name="matricule" value="<?= $data_eleve ? $data_eleve->eleve_matricule :'' ?>" id="matricule" class="form-control form-control-sm " placeholder="Matricule">
+                  <div class="text-danger" id="error_matricule"></div>
+                </div>
+                <div class="col-sm-2">
+                  <label for="nc">NC  <strong class="text-danger">*</strong></label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" name="nc" value="<?= $data_eleve ? $data_eleve->eleve_nc :'' ?>" id="nc" class="form-control form-control-sm " placeholder="NC">
+                  <div class="text-danger" id="error_nc"></div>
+                </div>
+              </div>
             </div>
             <div class="col-sm-1">
               <label for="numero">Numéro  <strong class="text-danger">*</strong></label>
@@ -153,8 +164,7 @@
                     <td>
                       <select name="session" id="session" class="form-control form-control-sm">
                         <option value="-1"></option>
-                        <?php foreach ($all_session as $i => $session):
-                        ?>
+                        <?php foreach ($all_session as $i => $session):?>
                           <option value="<?=$session['param_id']?>"><?=$session['param_description']?></option>
                         <?php endforeach; ?>
                       </select>

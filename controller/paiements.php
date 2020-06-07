@@ -25,10 +25,16 @@
 
 		if (isset($_GET['type_recherche'])) {
 			$type_recherche = $_GET['type_recherche'];
-			if ($type_recherche == 'deperdition') {
-				$query .= " AND p.paiement_montant!=p.paiement_total";
-			} else if ($type_recherche == 'payer') {
-				$query .= " AND p.paiement_montant=p.paiement_total";
+			switch ($type_recherche) {
+				case 'deperdition':
+					$query .= " AND p.paiement_montant!=p.paiement_total";
+					break;
+				case 'payer':
+					$query .= " AND p.paiement_montant=p.paiement_total";
+					break;
+				case 'non_payer':
+					$query = "SELECT p.*, eleves.* FROM paiements AS p RIGHT JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk WHERE 1 AND p.paiement_id IS NULL";
+					break;
 			}
 		}
 
@@ -99,10 +105,16 @@
 		
 		if (isset($_GET['type_recherche'])) {
 			$type_recherche = $_GET['type_recherche'];
-			if ($type_recherche == 'deperdition') {
-				$query .= " AND p.paiement_montant!=p.paiement_total";
-			} else if ($type_recherche == 'payer') {
-				$query .= " AND p.paiement_montant=p.paiement_total";
+			switch ($type_recherche) {
+				case 'deperdition':
+					$query .= " AND p.paiement_montant!=p.paiement_total";
+					break;
+				case 'payer':
+					$query .= " AND p.paiement_montant=p.paiement_total";
+					break;
+				case 'non_payer':
+					$query = "SELECT p.*, eleves.* FROM paiements AS p RIGHT JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk WHERE 1 AND p.paiement_id IS NULL";
+					break;
 			}
 		}
 
@@ -198,22 +210,22 @@
 				$session = $c['session'];
 				$classe .= "$cl $categorie $mention ($session)<br>";
 			}
-			$date_depot = strftime("%d/%M/ %Y", strtotime($value['paiement_date_depot']));
+			$date_depot = strtotime($value['paiement_date_depot']) ? strftime("%d/%m/ %Y", strtotime($value['paiement_date_depot'])) : '-';
 			$mt_total_total += $value['paiement_total'];
 			$mt_total_payer += $value['paiement_montant'];
 			$reste = $mt_total_total - $mt_total_payer;
-			$statut = $value['status'];
+			$statut = @$value['status'];
 			$content .= "
 				<tr>
-					<td>" . $date_depot . "</td>
-					<td>" . $value['paiement_total'] . " Ar</td>
-					<td>" . $value['paiement_montant'] . " Ar</td>
-					<td>" . ($value['paiement_total'] - $value['paiement_montant']) . " Ar</td>
-					<td>" . $value['type'] . "</td>
-					<td>" . $value['mode'] . "</td>
+					<td>" . @$date_depot . "</td>
+					<td>" . @$value['paiement_total'] . " Ar</td>
+					<td>" . @$value['paiement_montant'] . " Ar</td>
+					<td>" . (@$value['paiement_total'] - @$value['paiement_montant']) . " Ar</td>
+					<td>" . @$value['type'] . "</td>
+					<td>" . @$value['mode'] . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
 					<td>" . $value['eleve_nom'] . " ". $value['eleve_prenom'] ."</td>
-					<td>". $value['paiement_nc'] ."</td>
+					<td>". @$value['paiement_nc'] ."</td>
 					<td>$classe</td>
 					<td>$statut</td>
 				</tr>
@@ -239,19 +251,19 @@
 		$nm = date('m')*1 - 1;
 		$m = $monthNames[$nm];
 		$footer = "
-			</tr>
 		</table>
 		<footer>
 			<br>
 			<div align='right'>Antananarivo le , ".date("d") ." $m ". date('Y') ." </div>
 		</footer>
-	</body>
-</html>";
+		</body>
+		</html>";
 		$html = $header . $content . $footer;
 		// die($html);
 		$mpdf = new \Mpdf\Mpdf();
 		$mpdf->WriteHTML($html);
 		$mpdf->Output('liste_paiement.pdf', 'I');
+		$mpdf->Close();
 		exit();
 	}
 
@@ -319,9 +331,9 @@
 		$status_paiement = array_key_exists('status_paiement', $_POST) ? $_POST['status_paiement'] : null;
 		$numero_recu = array_key_exists('numero_recu', $_POST) ? $_POST['numero_recu'] : null;
 		$date_recu = array_key_exists('date_recu', $_POST) ? $_POST['date_recu'] : null;
-		$nc = array_key_exists('nc', $_POST) ? $_POST['nc'] : null;
 		$nom_eleve = array_key_exists('nom_eleve', $_POST) ? $_POST['nom_eleve'] : null;
 		$num_tranche = array_key_exists('num_tranche', $_POST) ? $_POST['num_tranche'] : null;
+		$mois = array_key_exists('mois', $_POST) ? $_POST['mois'] : null;
 		$eleve_id = '';
 
 		foreach ($all_eleves as $i => $eleve) {
@@ -358,8 +370,8 @@
 			'paiement_id' => '',
 			'paiement_montant' => $montant,
 			'paiement_total' => $montant,
-			'paiement_nc' => $nc,
 			'paiement_num_tranche' => $num_tranche,
+			'paiement_mois' => $mois,
 			'paiement_eleve_fk' => $eleve_id,
 			'paiement_status_param_fk' => $status_paiement,
 			'paiement_par_param_fk' => $status_paiement,
