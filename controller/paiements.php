@@ -270,22 +270,22 @@
 	/***********************************************/
 	//		AJAX SUPRESSION DU PAIEMENT
 	/***********************************************/
-	// if (isset($_GET['delete'])) {
-	// 	require_once '../config/default.php';
-	// 	require_once '../config/database.php';
-	// 	require_once '../helpers/auth.php';
-	// 	is_login($base_url);
-	// 	$db = new database();
+	if (isset($_GET['delete'])) {
+		require_once '../config/default.php';
+		require_once '../config/database.php';
+		require_once '../helpers/auth.php';
+		is_login($base_url);
+		$db = new database();
 
-	// 	if ($db->delete('paiements', ['paiement_id' => $_GET['delete']])) {
-	// 		header('Content-type: application/json');
-	// 		echo ('{ "status": "success" }');
-	// 	} else {
-	// 		header('Content-type: application/json');
-	// 		echo ('{ "status": "error" }');
-	// 	}
-	// 	exit();
-	// }
+		if ($db->delete('paiements', ['paiement_id' => $_GET['delete']])) {
+			header('Content-type: application/json');
+			echo ('{ "status": "success" }');
+		} else {
+			header('Content-type: application/json');
+			echo ('{ "status": "error" }');
+		}
+		exit();
+	}
 
 	/***********************************************/
 	//				ACTION PAR DEFAUT

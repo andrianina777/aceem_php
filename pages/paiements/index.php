@@ -283,21 +283,11 @@
                 return data.paiement_id !== null ? `
                   <div class="flex content-space">
                     <a href="javascript:void(0)" onclick="onViewEleve(${data.paiement_id})">Aperçu</a>
+                    <a href="javascript:void(0)" onclick="delete_paiement(${data.paiement_id})"><i class="fa fa-trash text-danger"></i></a>
                   </div>
                 ` : '<div class="text-danger">Aucun aperçu</div>';
               }
             }
-            /*{
-              "data": function(data, type, full) {
-                  let btn = `
-                  <div class="flex content-space">
-                    <a href="<?=$base_url?>/pages/paiements/create.php?id=${data.paiement_id}"><i class="fa fa-edit"></i></a>
-                    <a href="javascript:void(0)" onclick="delete_paiement(${data.paiement_id})"><i class="fa fa-trash text-danger"></i></a>
-                  </div>
-                  `;
-                  return btn;
-                }
-            }*/
     		],
     		'columnDefs': [
     			{ "targets": 0, "className": "text-center" },
@@ -363,7 +353,7 @@
     })
     
   }
-/*
+
   function delete_paiement(paiement_id) {
     Swal.fire({
       title: 'Êtes-vous sûre de le supprimer?',
@@ -395,6 +385,6 @@
         })
       }
     })
-  }*/
+  }
 </script>
 <?php require_once '../../layout/footer.php'; ?>
