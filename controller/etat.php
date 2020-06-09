@@ -101,7 +101,7 @@
 		require_once '../vendor/autoload.php';
 		is_login($base_url);
 		$db = new database();
-		$titre = "PAIEMENTS";
+		$titre = "ETAT GENERAL";
 		
 		if (isset($_GET['type_recherche'])) {
 			$type_recherche = $_GET['type_recherche'];
@@ -159,7 +159,7 @@
 				<html>
 					<head>
 						<meta charset='utf-8'>
-						<title>LISTE DES $titre</title>
+						<title>$titre</title>
 						<style>
 							th {
 								background-color: rgba(153, 153, 153, 0.6);
@@ -183,21 +183,16 @@
 					<body>
 						<div style='display=flex;'>
 							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
-							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+							<div align='center' style='font-size:20px;'> $titre</div>
 						</div>
 						<table style='width:100%'>
 							<tr>
-								<th>Date Réçu</th>
+				
 								<th>Total</th>
 								<th>Payer</th>
 								<th>Reste</th>
-								<th>Type</th>
-								<th>Mode</th>
-								<th>Matricule</th>
-								<th>Nom et prénom</th>
 								<th>Mois</th>
-								<th>Classe</th>
-								<th>Statut</th>
+
 							</tr>
 							<tr>
 		";
@@ -217,7 +212,7 @@
 			$statut = @$value['status'];
 			$content .= "
 				<tr>
-					<td>" . @$value['paiement_date_recu'] . "</td>
+					<td>" . @$date_depot . "</td>
 					<td>" . @$value['paiement_total'] . " Ar</td>
 					<td>" . @$value['paiement_montant'] . " Ar</td>
 					<td>" . (@$value['paiement_total'] - @$value['paiement_montant']) . " Ar</td>
@@ -225,8 +220,8 @@
 					<td>" . @$value['mode'] . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
 					<td>" . $value['eleve_nom'] . " ". $value['eleve_prenom'] ."</td>
-					<td>". @$value['paiement_mois'] ."</td>
-					<td>$classe </td>
+					<td>". @$value['paiement_nc'] ."</td>
+					<td>$classe</td>
 					<td>$statut</td>
 				</tr>
 			";
@@ -299,7 +294,7 @@
 	/**********************************/
 	require_once '../../config/database.php';
 
-	$page_title = "Paiements";
+	$page_title = "Etat Général";
 	$db = new database();
 
 	$data_paiement = null;

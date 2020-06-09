@@ -13,5 +13,5 @@
 <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 </html>
-<!-- Coded by: Jonathan Maheriniaina 👨‍💻 -->
+
 <!-- ©2020 -->
