@@ -101,7 +101,7 @@
           
         <!--Menu Etat général-->
           <li class="nav-item">
-            <a href="../../pages/etat general" class="nav-link <?=$page_title=='Etat Général'?'active':''?> ">
+            <a href="../../pages/etatGenerals" class="nav-link <?=$page_title=='Etat Général'?'active':''?> ">
             <i class="nav-icon fas fa-table"></i>
               <p>
                 Etat Général
