@@ -1,5 +1,8 @@
 <?php
-	$query = "SELECT e.* FROM eleves AS e";
+	$query = "
+		SELECT e.* FROM eleves AS e 
+		INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk
+	";
 	/***********************************************/
 	//		AJAX LISTE DE TOUT LES ELEVES
 	/***********************************************/
@@ -9,34 +12,38 @@
 		require_once '../helpers/auth.php';
 		is_login($base_url);
 		$db = new database();
-		if (isset($_GET['type_recherche'])) {
-			switch ($_GET['type_recherche']) {
+		$query .= " __JOINTURE__ ";
+		if (isset($_GET['typeSearch'])) {
+			switch ($_GET['typeSearch']) {
 				case 'AVEC_DOUBLON':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)>1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+					$query .= " INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)>1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
 				break;
 				case 'SANS_DOUBLON':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)=1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+					$query .= " INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)=1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
 					break;
 			}	
 		}
 
-		if (isset($_GET['filtrer_par']) && isset($_GET['param'])) {
-			switch ($_GET['filtrer_par']) {
-				case 'CLASSE':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_param_fk WHERE c.classe_param_fk=" . $_GET['param'];
-					break;
-				case 'SESSION':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_session_param_fk WHERE c.classe_session_param_fk=" . $_GET['param'];
-					break;
-				case 'MENTION':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_mention_param_fk WHERE c.classe_mention_param_fk=" . $_GET['param'];
-					break;
-				case 'NC':
-					$query = "SELECT e.* FROM eleves AS e WHERE e.eleve_nc='" . $_GET['param'] . "'";
-					break;
-			}
+		$query .= " WHERE 1 ";
+		$join = '';
+
+		if (isset($_GET['classe']) && $_GET['classe'] != -1) {
+			$join .= " INNER JOIN param_divers AS cp ON cp.param_id=c.classe_param_fk ";
+			$query .= " AND c.classe_param_fk=" . $_GET['classe'];
+		}
+		if (isset($_GET['session']) && $_GET['session'] != -1) {
+			$join .= "INNER JOIN param_divers AS sp ON sp.param_id=c.classe_session_param_fk";
+			$query .= " AND c.classe_session_param_fk=" . $_GET['session'];
+		}
+		if (isset($_GET['mention']) && $_GET['mention'] != -1) {
+			$join .= "INNER JOIN param_divers AS mp ON mp.param_id=c.classe_mention_param_fk";
+			$query .= " AND c.classe_mention_param_fk=" . $_GET['mention'];
+		}
+		if (isset($_GET['nc']) && $_GET['nc'] != '') {
+			$query .= " AND e.eleve_nc='" . $_GET['nc'] . "%'";
 		}
 
+		$query = str_replace('__JOINTURE__', $join, $query);
 		$data = $db->get_query($query);
 		foreach ($data as $i => $eleve) {
 			$q = "
@@ -50,7 +57,6 @@
 				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
 				WHERE classes.classe_eleve_fk={$eleve['eleve_id']}
 			";
-
 			$classe = $db->get_query($q);
 			$data[$i]['classe'] = $classe;
 		}
@@ -71,41 +77,38 @@
 		$titre = "ELEVES";
 		is_login($base_url);
 		$db = new database();
-		if (isset($_GET['type_recherche'])) {
-			switch ($_GET['type_recherche']) {
+		$query .= " __JOINTURE__ ";
+		if (isset($_GET['typeSearch'])) {
+			switch ($_GET['typeSearch']) {
 				case 'AVEC_DOUBLON':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)>1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+					$query .= " INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)>1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
 				break;
 				case 'SANS_DOUBLON':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)=1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
+					$query .= " INNER JOIN (SELECT eleve_matricule FROM eleves GROUP BY eleve_matricule HAVING COUNT(eleve_matricule)=1) AS temp ON e.eleve_matricule=temp.eleve_matricule";
 					break;
 			}	
 		}
 
-		if (isset($_GET['filtrer_par']) && isset($_GET['param'])) {
-			switch ($_GET['filtrer_par']) {
-				case 'CLASSE':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_param_fk WHERE c.classe_param_fk=" . $_GET['param'];
-					$c = $db->get_query("SELECT param_description AS classe FROM param_divers WHERE param_id=" . $_GET['param'])[0]['classe'];
-					$titre = "ELEVES EN CLASSE $c";
-					break;
-				case 'SESSION':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_session_param_fk WHERE c.classe_session_param_fk=" . $_GET['param'];
-					$c = $db->get_query("SELECT param_description AS session FROM param_divers WHERE param_id=" . $_GET['param'])[0]['session'];
-					$titre = "ELEVES SESSION $c";
-					break;
-				case 'MENTION':
-					$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk INNER JOIN param_divers AS p ON p.param_id=c.classe_mention_param_fk WHERE c.classe_mention_param_fk=" . $_GET['param'];
-					$c = $db->get_query("SELECT param_description AS mention FROM param_divers WHERE param_id=" . $_GET['param'])[0]['mention'];
-					$titre = "ELEVES MENTION $c";
-					break;
-				case 'NC':
-					$query = "SELECT e.* FROM eleves AS e WHERE e.eleve_nc='" . $_GET['param'] . "'";
-					$titre = "ELEVES NC " . $_GET['param'];
-					break;
-			}
+		$query .= " WHERE 1 ";
+		$join = '';
+
+		if (isset($_GET['classe']) && $_GET['classe'] != -1) {
+			$join .= " INNER JOIN param_divers AS cp ON cp.param_id=c.classe_param_fk ";
+			$query .= " AND c.classe_param_fk=" . $_GET['classe'];
+		}
+		if (isset($_GET['session']) && $_GET['session'] != -1) {
+			$join .= "INNER JOIN param_divers AS sp ON sp.param_id=c.classe_session_param_fk";
+			$query .= " AND c.classe_session_param_fk=" . $_GET['session'];
+		}
+		if (isset($_GET['mention']) && $_GET['mention'] != -1) {
+			$join .= "INNER JOIN param_divers AS mp ON mp.param_id=c.classe_mention_param_fk";
+			$query .= " AND c.classe_mention_param_fk=" . $_GET['mention'];
+		}
+		if (isset($_GET['nc']) && $_GET['nc'] != '') {
+			$query .= " AND e.eleve_nc='" . $_GET['nc'] . "%'";
 		}
 
+		$query = str_replace('__JOINTURE__', $join, $query);
 		$data = $db->get_query($query);
 		foreach ($data as $i => $eleve) {
 			$q = "
@@ -127,7 +130,7 @@
 		$content = "";
 		$mt_total_total = 0;
 		$mt_total_payer = 0;
-		$monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+		$monthNames = getAllMounth();
 		$header = "
 			<!DOCTYPE html>
 				<html>
@@ -206,7 +209,7 @@
 		</html>";
 		$html = $header . $content . $footer;
 		// die($html);
-		$mpdf = new \Mpdf\Mpdf();
+		$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
 		$mpdf->WriteHTML($html);
 		$mpdf->Output('liste_eleves.pdf', 'I');
 		$mpdf->Close();
@@ -288,6 +291,7 @@
 	// AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);
 	if (isset($_POST['submit_eleve'])) {
+		$isModif = !empty($_POST['id']);
 		$classe_data = json_decode($_POST['classe']);
 		$nom = array_key_exists('nom', $_POST) ? $_POST['nom'] : null;
 		$prenom = array_key_exists('prenom', $_POST) ? $_POST['prenom'] : null;
@@ -328,8 +332,14 @@
 			
 			default:
 			$nc_doublon = $db->get_query("SELECT COUNT(*) AS nc_doublon FROM eleves WHERE eleve_nc='$nc'")[0]['nc_doublon'];
-			if ($nc_doublon > 0) {
-				$_SESSION['error']['error_nc'] = "Le NC que vous avez entrer existe déjà";
+			if (!$isModif) {
+				if ($nc_doublon > 0) {
+					$_SESSION['error']['error_nc'] = "Le NC que vous avez entrer existe déjà";
+				}
+			} else {
+					if ($nc_doublon > 1) {
+						$_SESSION['error']['error_nc'] = "Le NC que vous avez entrer existe déjà";
+					}
 			}
 			switch ('') {
 				case $date_naissance:
@@ -352,7 +362,7 @@
 				];
 				if (!array_key_exists('error', $_SESSION)) {
 					// CREATION
-					if (empty($_POST['id'])) {
+					if (!$isModif) {
 						if ($eleve_photo) {
 							move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FICHIER
 						}

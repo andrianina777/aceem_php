@@ -105,7 +105,7 @@
         </div>
       </div>
         
-      <main class="row">
+      <main class="container row">
         <div class="col-sm-12">
           <table id="JodataTable" class="table table-hover">
             <thead>
@@ -315,7 +315,7 @@
         <div class="container" align="left">
         <div class="row">
           <div class="col-sm-4">
-            <img src="<?=$base_url?>/resources/eleves/${data.eleve_photo}" height="80px">
+            ${data.eleve_photo=='-'?'<i class="fa fa-user-circle fa-4x" aria-hidden="true"></i>':'<img src="../../resources/eleves/'+data.eleve_photo+'" height="80px">'}
           </div>
           <div class="col-sm-8" align="right">
             <h4>${data.eleve_nom} ${data.eleve_prenom}</h4>
@@ -325,13 +325,13 @@
           </div>
         </div>
           
-          <div><u><i>Mode de paiement</u></i> :<b>${data.mode} </b></div>
-          <div><u><i>status de paiement</u></i> :<b>${data.status}</b></div>
-          <div><u><i>Type de paiement</u></i> :<b>${data.type}</b></div>
-          <div><u><i>Reçu numéro</u></i> :<b>${data.paiement_numero_recu}</b></div>
+          <div><u><i>Mode de paiement</u></i> : <b>${data.mode} </b></div>
+          <div><u><i>status de paiement</u></i> : <b>${data.status}</b></div>
+          <div><u><i>Type de paiement</u></i> : <b>${data.type}</b></div>
+          <div><u><i>Reçu numéro</u></i> : <b>${data.paiement_numero_recu}</b></div>
           <div><u><i>Date Reçu</u></i> :<b> ${date_formatter(data.paiement_date_recu)}</b></div>
-          <div><u><i>Date d'inscription</u></i> :<b>${date_formatter(data.eleve_date_inscription)}</b></div>
-          <div><u><i>Observation</u><i> :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
+          <div><u><i>Date d'inscription</u></i> : <b>${date_formatter(data.eleve_date_inscription)}</b></div>
+          <div><u><i>Observation</u><i> : ${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
 
           <div><u><i>Montant payer</u></i>:<b> ${format_montant(data.paiement_montant)} Ar</b></div>
           
