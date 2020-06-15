@@ -1,37 +1,37 @@
 <?php
-  include '../../controller/paiements.php';
-  require_once '../../layout/header.php'; 
-  require_once '../../layout/sidebar.php';
-  require_once '../../layout/navbar.php';
-?>
-  <style type="text/css">
-    #JodataTable tbody tr td:nth-child(4),
-    #JodataTable tfoot tr td:nth-child(4) {
-      color: red;
-    }
-    #JodataTable tfoot {
-      background-color: #eee;
-    }
-  </style>
-  <div class="content">
-    <div class="container-fluid">
-      <div class="search-content">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-1">
-              <a href="<?=$base_url?>/pages/paiements/create.php" class="btn btn-danger">Créer</a>
-            </div>
-            <div class="col-sm-2">
-              <button class="btn btn-default" id="btn_search"><i class="fa fa-search"></i></button>
-              <button class="btn btn-default" id="btn_print"><i class="fa fa-print"></i></button>
-            </div>
-            <div class="col-sm-5 form-group">
-              <div class="row">
-                <div class="col-sm-5">
-                  <label for="description">Recherche :</label>
-                </div>
-                <div class="col-sm-7">
-                  <input type="text" id="search" class="form-control form-control-sm" placeholder="NC, matricule, nom, ...">
+    include '../../controller/paiements.php';
+    require_once '../../layout/header.php'; 
+    require_once '../../layout/sidebar.php';
+    require_once '../../layout/navbar.php';
+  ?>
+    <style type="text/css">
+      #JodataTable tbody tr td:nth-child(4),
+      #JodataTable tfoot tr td:nth-child(4) {
+        color: red;
+      }
+      #JodataTable tfoot {
+        background-color: #eee;
+      }
+    </style>
+    <div class="content">
+      <div class="container-fluid">
+        <div class="search-content">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-1">
+                <a href="<?=$base_url?>/pages/paiements/create.php" class="btn btn-danger">Créer</a>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-default" id="btn_search"><i class="fa fa-search"></i></button>
+                <button class="btn btn-default" id="btn_print"><i class="fa fa-print"></i></button>
+              </div>
+              <div class="col-sm-5 form-group">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label for="description">Recherche :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="text" id="search" class="form-control form-control-sm" placeholder="Matricule, nom, ...">
                 </div>
               </div>
             </div>
@@ -331,7 +331,7 @@
           <div><u><i>Reçu numéro</u></i> :<b>${data.paiement_numero_recu}</b></div>
           <div><u><i>Date Reçu</u></i> :<b> ${date_formatter(data.paiement_date_recu)}</b></div>
           <div><u><i>Date d'inscription</u></i> :<b>${date_formatter(data.eleve_date_inscription)}</b></div>
-          <div><u><i>Observation</u><i> :${data.paiement_commentaire==null?'':data.paiement_commentaire}</div>
+          
 
           <div><u><i>Montant payer</u></i>:<b> ${format_montant(data.paiement_montant)} Ar</b></div>
           

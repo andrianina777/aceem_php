@@ -158,6 +158,11 @@
 						<div style='display=flex;'>
 							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
 							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+							<h4>Cellule de suivie d'Evaluation</h4>
+							Total des " . strtolower($titre) . " : " . sizeof($data) . "
+							<br>
+							<br>
+							
 						</div>
 						<table style='width:100%'>
 							<tr>
@@ -194,10 +199,6 @@
 		$footer = "
 		</table>
 		<footer>
-			<br>
-			<br>
-			Total des " . strtolower($titre) . " : " . sizeof($data) . "
-			<br>
 			<br>
 			<br>
 			<div align='right'>Antananarivo le , " . date("d") . " $m " . date('Y') . " </div>

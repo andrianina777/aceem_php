@@ -132,6 +132,19 @@
 			}
 		}
 
+
+		/*		if (isset($_GET['type_recherche']) && isset($_GET['param'])) {
+			switch ($_GET['type_recherche']) {
+				case 'PAIEMENT':
+					$query = "SELECT e.* FROM paiements AS e INNER JOIN paiements AS c ON e.paiement_id=c.type_paiement_fk INNER JOIN param_divers AS p ON p.param_id=c.paiement_param_fk WHERE c.paiement_param_fk=" . $_GET['param'];
+					$c = $db->get_query("SELECT param_description AS paiements FROM param_divers WHERE param_id=" . $_GET['param'])[0]['paiements'];
+					$titre = "PAIEMENT EN CLASSE $c";
+					break;
+
+			}
+		}*/
+	
+
 		$data = $db->get_query($query);
 
 		foreach ($data as $i => $paiement) {
@@ -184,6 +197,7 @@
 						<div style='display=flex;'>
 							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
 							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+							<h4>Cellule de suivie d'Evaluation</h4>
 						</div>
 						<table style='width:100%'>
 							<tr>

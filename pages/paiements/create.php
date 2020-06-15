@@ -39,7 +39,9 @@
                     <?php endforeach; ?>
                   </select>
                   <input type="number" name="num_tranche" id="num_tranche" min="0" class="form-control form-control-sm" placeholder="numéro du tranche">
+
                   <input type="text" name="mois" id="mois" min="0" class="form-control form-control-sm" placeholder="mois">
+                  
                 </div>
               </div>
             </div>
@@ -249,10 +251,7 @@
         <div class="row" style="display:contents;text-align:center;font-weight:bold;">
           <div class="text-success">${paiement_par} ${num_tranche}</div>
         </div>
-        <div class="row">
-          <div class="col-sm-6">NC</div>
-          <div class="col-sm-6">${nc}</div>
-        </div>
+        
         <div class="row">
           <div class="col-sm-6">Nom de l'élève</div>
           <div class="col-sm-6">${nom_eleve}</div>
@@ -282,7 +281,7 @@
           <div class="col-sm-6">${mode_paiement}</div>
         </div>
         <div class="row">
-          <div class="col-sm-6">Commentaire</div>
+          <div class="col-sm-6">Observation</div>
           <div class="col-sm-6">${commentaire}</div>
         </div>
       </div>
