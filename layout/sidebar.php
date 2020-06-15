@@ -34,7 +34,7 @@
           ?>
           <li class="nav-item has-treeview <?=$open?>">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="nav-icon fas fa-address-book"></i>
               <p>
                 Administration
                 <i class="right fas fa-angle-left"></i>
@@ -44,7 +44,7 @@
               <?php if (is_privileged('utilisateurs')): ?>
               <li class="nav-item">
                 <a href="../../pages/utilisateurs" class="nav-link <?=$page_title=='Utilisateurs'?'active':''?>">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fa fa-user nav-icon"></i>
                   <p>Utilisateurs</p>
                 </a>
               </li>
@@ -52,7 +52,7 @@
               <?php if (is_privileged('groupes')): ?>
               <li class="nav-item">
                 <a href="../../pages/groupes" class="nav-link <?=$page_title=='Groupes'?'active':''?>">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fa fa-users nav-icon"></i>
                   <p>Groupes</p>
                 </a>
               </li>
@@ -60,7 +60,7 @@
               <?php if (is_privileged('historiques')): ?>
               <li class="nav-item">
                 <a href="../../pages/historiques" class="nav-link <?=$page_title=='Historiques'?'active':''?>">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fa fa-list nav-icon"></i>
                   <p>Historiques</p>
                 </a>
               </li>
@@ -71,7 +71,7 @@
           <?php if (is_privileged('parametrages')): ?>
           <li class="nav-item">
             <a href="../../pages/parametrages" class="nav-link <?=$page_title=='Paramètrages'?'active':''?>">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-cog"></i>
               <p>
                 Paramètrages
               </p>
@@ -81,7 +81,7 @@
           <?php if (is_privileged('eleves')): ?>
           <li class="nav-item">
             <a href="../../pages/eleves" class="nav-link <?=$page_title=='Élèves'?'active':''?>">
-              <i class="nav-icon fas fa-table"></i>
+              <i class="nav-icon fas fa-user-circle"></i>
               <p>
                 Élèves
               </p>
@@ -91,7 +91,7 @@
           <?php if (is_privileged('paiements')): ?>
           <li class="nav-item">
             <a href="../../pages/paiements" class="nav-link <?=$page_title=='Paiements'?'active':''?>">
-              <i class="nav-icon fas fa-table"></i>
+              <i class="nav-icon fas fa-credit-card"></i>
               <p>
                 Paiements
               </p>
@@ -102,7 +102,7 @@
         <!--Menu Etat général-->
           <li class="nav-item">
             <a href="../../pages/etatGenerals" class="nav-link <?=$page_title=='Etat Général'?'active':''?> ">
-            <i class="nav-icon fas fa-table"></i>
+            <i class="nav-icon fas fa-calendar-check"></i>
               <p>
                 Etat Général
               </p>

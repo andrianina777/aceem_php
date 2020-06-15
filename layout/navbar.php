@@ -11,8 +11,8 @@
           <li class="breadcrumb-item active">Starter Page</li> -->
         </ol>
         <div class="float-sm-right">
-          <a href="../login?logout=1" class="btn btn-default d-flex">
-            Se deconnecter
+          <a href="../login?logout=1" class="btn btn-default btn-sm">
+            <i class="fas fa-power-off"></i>  Se deconnecter
           </a>
         </div>
       </div><!-- /.col -->

@@ -27,6 +27,7 @@
               </div>
             </div>
             <div class="col-sm-4">
+              <a href="javascript:void(0)" id="toggleFilter">Plus de filtre</a>
               <div class="float-sm-right btn-pagination">
                 <span class="page-start">0</span> - <span class="page-end">0</span> / <span class="page-total">0</span>&nbsp; 
                 <a href="javascript:void(0)" class="fas fa-arrow-alt-circle-left" onclick="pagePrecedent()"></a>
@@ -51,92 +52,77 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
-                  <label for="filtrer_par">Filtrer par :</label>
-                </div>
-                <div class="col-sm-7">
-                  <select id="filtrer_par" class="form-control form-control-sm">
-                    <option value="TOUT">Tout</option>
-                    <option value="CLASSE">Classe</option>
-                    <option value="SESSION">Session</option>
-                    <option value="MENTION">Mention</option>
-                    <option value="NC">NC</option>
-                  </select>
+          <div id="filter" class="hidden">
+            <div class="row" id="nc_group">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-5">
+                <div class="row form-group">
+                  <div class="col-sm-5">
+                    <label for="nc">NC :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="text" id="nc" class="form-control form-control-sm" placeholder="NC">
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row" id="nc_group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
-                  <label for="nc">NC :</label>
-                </div>
-                <div class="col-sm-7">
-                  <input type="text" id="nc" class="form-control form-control-sm" placeholder="NC">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row" id="classe_group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
-                  <label for="classe">Classe :</label>
-                </div>
-                <div class="col-sm-7">
-                  <select id="classe" class="form-control form-control-sm">
-                    <?php foreach ($all_classe as $i => $classe):?>
-                      <option value="<?=$classe['param_id']?>"><?=$classe['param_description']?></option>
-                    <?php endforeach; ?>
-                  </select>
+            <div class="row" id="classe_group">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-5">
+                <div class="row form-group">
+                  <div class="col-sm-5">
+                    <label for="classe">Classe :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <select id="classe" class="form-control form-control-sm">
+                      <option value="-1">Tout</option>
+                      <?php foreach ($all_classe as $i => $classe):?>
+                        <option value="<?=$classe['param_id']?>"><?=$classe['param_description']?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row" id="mention_group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
-                  <label for="mention">Mention :</label>
-                </div>
-                <div class="col-sm-7">
-                  <select id="mention" class="form-control form-control-sm">
-                    <?php foreach ($all_mention as $i => $mention):?>
-                      <option value="<?=$mention['param_id']?>"><?=$mention['param_description']?></option>
-                    <?php endforeach; ?>
-                  </select>
+            <div class="row" id="mention_group">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-5">
+                <div class="row form-group">
+                  <div class="col-sm-5">
+                    <label for="mention">Mention :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <select id="mention" class="form-control form-control-sm">
+                      <option value="-1">Tout</option>
+                      <?php foreach ($all_mention as $i => $mention):?>
+                        <option value="<?=$mention['param_id']?>"><?=$mention['param_description']?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row" id="session_group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5">
-              <div class="row form-group">
-                <div class="col-sm-5">
-                  <label for="session">Session :</label>
-                </div>
-                <div class="col-sm-7">
-                  <select id="session" class="form-control form-control-sm">
-                    <?php foreach ($all_session as $i => $session):?>
-                      <option value="<?=$session['param_id']?>"><?=$session['param_description']?></option>
-                    <?php endforeach; ?>
-                  </select>
+            <div class="row" id="session_group">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-5">
+                <div class="row form-group">
+                  <div class="col-sm-5">
+                    <label for="session">Session :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <select id="session" class="form-control form-control-sm">
+                      <option value="-1">Tout</option>
+                      <?php foreach ($all_session as $i => $session):?>
+                        <option value="<?=$session['param_id']?>"><?=$session['param_description']?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-        
       <main class="row">
         <div class="col-sm-12">
           <table id="JodataTable" class="table table-hover">
@@ -168,64 +154,30 @@
   table = null;
 
   $(document).ready(function() {
-    $('#classe_group').hide();
-    $('#session_group').hide();
-    $('#mention_group').hide();
-    $('#nc_group').hide();
     init_table();
   });
+
+  $('#toggleFilter').click(() => {
+    console.log('test');
+    
+    $('#filter').slideToggle('slow');
+  })
 
   $('#type_recherche').change((e) => {
     let v = e.target.value;
     table.destroy();
     init_table(`<?= $base_url ?>/controller/eleves.php?list=0&type_recherche=${v}`)
   })
-
-  $('#filtrer_par').change((e) => {
-    let v = e.target.value;
-    switch (v) {
-      case 'CLASSE':
-        $('#session_group').slideUp()
-        $('#mention_group').slideUp()
-        $('#nc_group').slideUp()
-        $('#classe_group').slideDown('slow')
-        break;
-      case 'SESSION':
-        $('#classe_group').slideUp()
-        $('#mention_group').slideUp()
-        $('#nc_group').slideUp()
-        $('#session_group').slideDown('slow')
-        break;
-      case 'MENTION':
-        $('#session_group').slideUp()
-        $('#classe_group').slideUp()
-        $('#nc_group').slideUp()
-        $('#mention_group').slideDown('slow')
-        break;
-      case 'NC':
-        $('#session_group').slideUp()
-        $('#classe_group').slideUp()
-        $('#mention_group').slideUp()
-        $('#nc_group').slideDown('slow')
-        break;
-      case 'TOUT':
-        $('#classe_group').slideUp();
-        $('#session_group').slideUp();
-        $('#mention_group').slideUp();
-        $('#nc_group').slideUp()
-        break;
-    }
-  })
   
   $('#btn_search').click(() => {
-    let {v, p} = getSearchVal();
+    let {classe, mention, session, nc, typeSearch} = getSearchVal();
     table.destroy();
-    init_table(`<?= $base_url ?>/controller/eleves.php?list=0&filtrer_par=${v}&param=${p}`)
+    init_table(`<?= $base_url ?>/controller/eleves.php?list=0&typeSearch=${typeSearch}&classe=${classe}&mention=${mention}&session=${session}&nc=${nc}`)
   })
   
   $('#btn_print').click(() => {
-    let {v, p} = getSearchVal();
-    window.open(`<?= $base_url ?>/controller/eleves.php?pdf=0&filtrer_par=${v}&param=${p}`)
+    let {classe, mention, session, nc, typeSearch} = getSearchVal();
+    window.open(`<?= $base_url ?>/controller/eleves.php?pdf=0&typeSearch=${typeSearch}&classe=${classe}&mention=${mention}&session=${session}&nc=${nc}`)
   })
 
   $('#JoPaginate').change(() => {
@@ -238,23 +190,13 @@
   });
 
   function getSearchVal() {
-    let v = $('#filtrer_par').val();
-    let p = -1;
-    switch (v) {
-      case 'CLASSE':
-        p = $('#classe').val();
-        break;
-      case 'SESSION':
-        p = $('#session').val();
-        break;
-      case 'MENTION':
-        p = $('#mention').val();
-        break;
-      case 'NC':
-        p = $('#nc').val(); 
-        break;
-    }
-    return {v, p};
+    return {
+      classe: $('#classe').val(),
+      mention: $('#mention').val(),
+      session: $('#session').val(),
+      nc: $('#nc').val(),
+      typeSearch: $('#type_recherche').val()
+    };
   }
 
   function init_page_info() {
@@ -281,7 +223,7 @@
         "columns": [
             { "data": (data, type, full) => {
               if (data.eleve_photo == '-') {
-                return `<div align="center"><i class="fa fa-user fa-2x" aria-hidden="true"></i></div>`;
+                return `<div align="center"><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></div>`;
               } else {
                 return `<img src="<?=$base_url?>/resources/eleves/${data.eleve_photo}" height="80px">`;
               }
@@ -303,7 +245,7 @@
               let html = ``;
               for (var i = 0; i < data.classe.length; i++) {
                 let cl = data.classe[i];
-                html += `${cl.session}<br>`;
+                html += `${cl.session != null?cl.session:''}<br>`;
               }
               return html;
             } },

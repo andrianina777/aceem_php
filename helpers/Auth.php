@@ -50,7 +50,3 @@
 		];
 		$db->insert('historiques', $data);
 	}
-
-	function format_money($number) {
-		return number_format($number, 0, ',', ' '). " Ar";
-	}

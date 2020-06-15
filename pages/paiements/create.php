@@ -39,9 +39,20 @@
                     <?php endforeach; ?>
                   </select>
                   <input type="number" name="num_tranche" id="num_tranche" min="0" class="form-control form-control-sm" placeholder="numéro du tranche">
-
-                  <input type="text" name="mois" id="mois" min="0" class="form-control form-control-sm" placeholder="mois">
-                  
+                  <select name="mois" id="mois" class="form-control form-control-sm">
+                    <option value="Janvier">Janvier</option>
+                    <option value="Février">Février</option>
+                    <option value="Mars">Mars</option>
+                    <option value="Avril">Avril</option>
+                    <option value="Mai">Mai</option>
+                    <option value="Juin">Juin</option>
+                    <option value="Juillet">Juillet</option>
+                    <option value="Août">Août</option>
+                    <option value="Septembre">Septembre</option>
+                    <option value="Octobre">Octobre</option>
+                    <option value="Novembre">Novembre</option>
+                    <option value="Décembre">Décembre</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -86,7 +97,7 @@
                 <div class="col-sm-9">
                   <div class="row">
                     <div class="col-sm-6">
-                      <input name="numero_recu" id="numero_recu" type="number" min="0" class="form-control form-control-sm" placeholder="N° reçu">
+                      <input name="numero_recu" id="numero_recu" type="text" class="form-control form-control-sm" placeholder="N° reçu">
                       <div class="text-danger" id="error_numero_recu"></div>
                     </div>
                     <div class="col-sm-4">
@@ -251,7 +262,6 @@
         <div class="row" style="display:contents;text-align:center;font-weight:bold;">
           <div class="text-success">${paiement_par} ${num_tranche}</div>
         </div>
-        
         <div class="row">
           <div class="col-sm-6">Nom de l'élève</div>
           <div class="col-sm-6">${nom_eleve}</div>

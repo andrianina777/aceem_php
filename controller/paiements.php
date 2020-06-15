@@ -7,7 +7,7 @@
 			m.param_id, m.param_description AS mode,
 			s.param_description AS status
 		FROM paiements AS p
-		JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk
+		LEFT JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk
 		JOIN param_divers AS t ON t.param_id=p.paiement_type_paiement_param_fk
 		JOIN param_divers AS m ON m.param_id=p.paiement_mode_paiement_param_fk
 		JOIN param_divers AS s ON s.param_id=p.paiement_status_param_fk
@@ -68,7 +68,10 @@
 				LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
 				WHERE classes.classe_eleve_fk={$paiement['eleve_id']}
 			";
-			$classe = $db->get_query($q);
+			$classe = [];
+			if ($paiement['eleve_id']) {
+				$classe = $db->get_query($q);
+			}
 			$data[$i]['classe'] = $classe;
 		}
 		header('Content-type: application/json');
@@ -213,7 +216,6 @@
 								<th>Classe</th>
 								<th>Statut</th>
 							</tr>
-							<tr>
 		";
 		foreach ($data as $i => $value) {
 			$classe = '';
@@ -224,6 +226,7 @@
 				$session = $c['session'];
 				$classe .= "$cl $categorie $mention ($session)<br>";
 			}
+			$date_recu = strftime("%d/%m/%Y", strtotime($value['paiement_date_recu']));
 			$date_depot = strtotime($value['paiement_date_depot']) ? strftime("%d/%m/ %Y", strtotime($value['paiement_date_depot'])) : '-';
 			$mt_total_total += $value['paiement_total'];
 			$mt_total_payer += $value['paiement_montant'];
@@ -231,10 +234,10 @@
 			$statut = @$value['status'];
 			$content .= "
 				<tr>
-					<td>" . @$value['paiement_date_recu'] . "</td>
-					<td>" . @$value['paiement_total'] . " Ar</td>
-					<td>" . @$value['paiement_montant'] . " Ar</td>
-					<td>" . (@$value['paiement_total'] - @$value['paiement_montant']) . " Ar</td>
+					<td>" . @$date_recu . "</td>
+					<td>" . format_money($value['paiement_total']) . "</td>
+					<td>" . format_money($value['paiement_montant']) . "</td>
+					<td>" . format_money($value['paiement_total'] - $value['paiement_montant']) . " Ar</td>
 					<td>" . @$value['type'] . "</td>
 					<td>" . @$value['mode'] . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
@@ -249,9 +252,9 @@
 				<tfoot>
 					<tr>
 						<td></td>
-						<td>$mt_total_total Ar</td>
-						<td> $mt_total_payer Ar</td>
-						<td>$reste Ar</td>
+						<td>" . format_money($mt_total_total) . "</td>
+						<td>" . format_money($mt_total_payer) . "</td>
+						<td>" . format_money($reste) . "</td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -273,8 +276,7 @@
 		</body>
 		</html>";
 		$html = $header . $content . $footer;
-		// die($html);
-		$mpdf = new \Mpdf\Mpdf();
+		$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
 		$mpdf->WriteHTML($html);
 		$mpdf->Output('liste_paiement.pdf', 'I');
 		$mpdf->Close();
@@ -329,7 +331,7 @@
 	$status_dpcomplet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_dpcomplet'")[0]['param_id'];
 	$all_paiement_par = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='paiement_par'");
 	$paiement_tranche_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='tranche'")[0]['param_id'];
-	$last_recu = $db->get_query("SELECT MAX(p.paiement_numero_recu) AS last_recu FROM paiements AS p")[0]['last_recu'];
+	$last_recu = $db->get_query("SELECT MAX(p.paiement_id), p.paiement_numero_recu AS last_recu FROM paiements AS p")[0]['last_recu'];
 
 	// AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);
@@ -364,8 +366,8 @@
 			$_SESSION['error']['error_nom_eleve'] = "Cette élève n'existe pas.";
 		}
 
-		if ((int) $numero_recu == 0) {
-			$_SESSION['error']['error_numero_recu'] = "Veuillez insérer nombre.";
+		if ($numero_recu == '') {
+			$_SESSION['error']['error_numero_recu'] = "Ce champs est obligatoire.";
 		}
 		if ($status_complet_id == $status_paiement || $status_dpcomplet_id == $status_paiement) {
 			if ((int) $montant == 0) {
@@ -391,6 +393,7 @@
 			'paiement_par_param_fk' => $status_paiement,
 			'paiement_numero_recu' => $numero_recu,
 			'paiement_date_recu' => $date_recu,
+			'paiement_commentaire' => $description,
 			'paiement_type_paiement_param_fk' => $type_paiement,
 			'paiement_mode_paiement_param_fk' => $mode_paiement
 		];

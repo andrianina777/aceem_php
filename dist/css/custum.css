@@ -1,5 +1,13 @@
+.nav-sidebar .nav-treeview {
+    background-color: #282b2f !important;
+}
+
+.text-danger {
+    font-size: 12px;
+}
+
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 .search-content {
@@ -14,7 +22,6 @@
 .content-space {
     justify-content: space-around;
 }
-
 
 .form-control-perso {
     height: 30px !important;
