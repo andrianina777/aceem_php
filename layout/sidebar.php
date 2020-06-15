@@ -78,6 +78,17 @@
             </a>
           </li>
           <?php endif; ?>
+          
+        <!--Menu Etat général-->
+          <li class="nav-item">
+            <a href="../../pages/etatGenerals" class="nav-link <?=$page_title=='Etat Général'?'active':''?> ">
+            <i class="nav-icon fas fa-calendar-check"></i>
+              <p>
+                Etat Général
+              </p>
+            </a>
+          </li>
+
           <?php if (is_privileged('eleves')): ?>
           <li class="nav-item">
             <a href="../../pages/eleves" class="nav-link <?=$page_title=='Élèves'?'active':''?>">
@@ -99,17 +110,9 @@
           </li>
           <?php endif; ?>
           
-        <!--Menu Etat général-->
-          <li class="nav-item">
-            <a href="../../pages/etatGenerals" class="nav-link <?=$page_title=='Etat Général'?'active':''?> ">
-            <i class="nav-icon fas fa-calendar-check"></i>
-              <p>
-                Etat Général
-              </p>
-            </a>
-          </li>
+
                   <!--Numéro reçu manquant-->
-          <li class="nav-item">
+        <!--<li class="nav-item">
             <a href="#" class="nav-link ">
             <i class="nav-icon fas fa-table"></i>
               <p>
@@ -117,7 +120,7 @@
               </p>
             </a>
           </li>
-        </ul>
+        </ul>-->
       </nav>
       <!-- /.sidebar-menu -->
     </div>
