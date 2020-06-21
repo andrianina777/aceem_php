@@ -33,9 +33,10 @@
 	}
 
 	function is_login($base_url) {
-		if (array_key_exists('uid', $_SESSION)) {
+        if (array_key_exists('uid', $_SESSION) && time() - $_SESSION['created_at'] < SESSION_LIFETIME) {
 			return true;
 		} else {
+		    session_unset();
 			header("location: $base_url/pages/login");
 			exit();
 		}

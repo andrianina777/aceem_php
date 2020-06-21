@@ -5,7 +5,7 @@ class database
 	private $pdo = null;
 	private $host = 'localhost';
 	private $user = 'root';
-	private $dbname = 'aceem';
+	private $dbname = 'aceem_';
 	private $password = '';
 
 	function __construct()
@@ -19,7 +19,7 @@ class database
 		}
 	}
 
-	// REQUETE DE SELECTION RAPIDE 
+	// REQUÊTE DE SELECTION RAPIDE
 	function get_query($sql) // RENVOYE UN TABLEAU
 	{
 		$stmt = $this->pdo->prepare($sql);
@@ -29,10 +29,12 @@ class database
 	}
 
 	// INSERTION DANS LA BASE
-	/**
-	 * @param $table_name (string) : nom de la table 
-	 * @param $data (array) : les données a inserée
-	*/
+  
+  /**
+   * @param $table_name (string) : nom de la table
+   * @param $data (array) : les données a insérée
+   * @return int
+   */
 	function insert($table_name, $data) {
 		$cols = [];
 		$values = [];
@@ -50,11 +52,13 @@ class database
 	}
 
 	// MODIFICATION DANS LA BASE
-	/**
-	 * @param $table_name (string) : nom de la table 
-	 * @param $data (array) : les données a inserée
-	 * @param $condition (array) : listes des conditions
-	*/
+  
+  /**
+   * @param $table_name (string) : nom de la table
+   * @param $data (array) : les données a insérée
+   * @param $condition (array) : listes des conditions
+   * @return bool|int
+   */
 	function update($table_name, $data, $condition) {
 		if (sizeof($condition) == 0) return false;
 
@@ -74,11 +78,13 @@ class database
 		return $this->pdo->exec($sql);
 	}
 
-	// SUPRESSION DANS LA BASE
-	/**
-	 * @param $table_name: nom de la table 
-	 * @param $condition (array) : listes des conditions
-	*/
+	// SUPPRESSION DANS LA BASE
+  
+  /**
+   * @param $table_name : nom de la table
+   * @param $condition (array) : listes des conditions
+   * @return bool|int
+   */
 	function delete($table_name, $condition) {
 		if (sizeof($condition) == 0) return false;
 
@@ -92,7 +98,10 @@ class database
 		
 		return $this->pdo->exec($sql);
 	}
-
+  
+  /**
+   * @return int : la dernière id insérer
+   */
 	function lastInsertId() {
 		return $this->pdo->lastInsertId();
 	}

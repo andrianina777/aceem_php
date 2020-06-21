@@ -13,131 +13,109 @@
         <input type="text" name="last_picture" value="'.$data_eleve->eleve_photo.'" hidden="true">
         ' :'' ?>
         <div class="row">
-          <div class="col-md-2 flex content-space">
+          <div class="col-md-2 d-flex toolbtn">
             <a href="javascript:void(0)" id="submit_eleve" class="btn btn-danger"><?= $data_eleve && !array_key_exists('error', $_SESSION) ? 'Modifier' :'Enregister'?></a>&nbsp;  <span>ou</span>&nbsp;  
             <a href="./">Annuler</a>
           </div>
         </div>
         <br>
-        <main>
+        <main class="container">
           <div class="row form-group">
-            <div class="col-sm-1">
-              <label for="photo">Photo</label>
+            <div class="col-2">
+              <label for="photo">photo</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-4">
               <div class="input-group">
                 <input type="file" value="<?= $data_eleve ? $data_eleve->eleve_photo :'' ?>" class="form-control form-control-sm" id="photo" name="photo"><br>
               </div>
               <div class="text-danger" id="error_photo"></div>
             </div>
-            <div class="col-sm-1">
-              <label for="date_inscription">Date d'inscription<strong class="text-danger">*</strong></label>
+            <div class="col-2">
+              <label for="date_inscription">date d'inscription<strong class="text-danger">*</strong></label>
             </div>
-            <div class="col-sm-3">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                </div>
-                <input type="date" name="date_inscription" value="<?= $data_eleve ? $data_eleve->eleve_date_inscription :'' ?>" class="form-control form-control-sm" id="date_inscription" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
-              </div>
-              <div class="text-danger" id="error_date_inscription"></div>
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="nom">Nom <strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" name="nom" value="<?= $data_eleve ? $data_eleve->eleve_nom :'' ?>" id="nom" class="form-control form-control-sm " placeholder="Nom">
-                  <div class="text-danger" id="error_nom"></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="prenom">Prénom  <strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" name="prenom" value="<?= $data_eleve ? $data_eleve->eleve_prenom :'' ?>" id="prenom" class="form-control form-control-sm " placeholder="Prénom">
-                  <div class="text-danger" id="error_prenom"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="date_naissance">Date de naissance  <strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-5">
+                        <input type="date" name="date_inscription" value="<?= $data_eleve ? $data_eleve->eleve_date_inscription :'' ?>" class="form-control form-control-sm" id="date_inscription" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+                        <div class="text-danger" id="error_date_inscription"></div>
                     </div>
-                    <input type="date" name="date_naissance" id="date_naissance" value="<?= $data_eleve ? $data_eleve->eleve_date_naissance :'' ?>" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
-                  </div>
-                  <div class="text-danger" id="error_date_naissance"></div>
+                    <div class="col-2 d-flex align-items-center">
+                        <label for="date_limite">sorti <strong class="text-danger">*</strong></label>
+                    </div>
+                    <div class="col-5">
+                        <input type="date" name="date_limite" value="<?= $data_eleve ? $data_eleve->eleve_date_limite :'' ?>" class="form-control form-control-sm" id="date_inscription" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+                        <div class="text-danger" id="error_date_limite"></div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label for="adresse">Adresse  <strong class="text-danger">*</strong></label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" name="adresse" value="<?= $data_eleve ? $data_eleve->eleve_adresse :'' ?>" id="adresse" class="form-control form-control-sm " placeholder="Adresse">
-                  <div class="text-danger" id="error_adresse"></div>
-                </div>
-              </div>
             </div>
           </div>
           <div class="row form-group">
-            <div class="col-sm-4">
+            <div class="col-2">
+              <label for="nom">nom <strong class="text-danger">*</strong></label>
+            </div>
+            <div class="col-4">
+              <input type="text" name="nom" value="<?= $data_eleve ? $data_eleve->eleve_nom :'' ?>" id="nom" class="form-control form-control-sm " placeholder="nom">
+              <div class="text-danger" id="error_nom"></div>
+            </div>
+            <div class="col-2">
+              <label for="prenom">prénom  <strong class="text-danger">*</strong></label>
+            </div>
+            <div class="col-4">
+              <input type="text" name="prenom" value="<?= $data_eleve ? $data_eleve->eleve_prenom :'' ?>" id="prenom" class="form-control form-control-sm " placeholder="prénom">
+              <div class="text-danger" id="error_prenom"></div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-2">
+              <label for="date_naissance">date de naissance </label>
+            </div>
+            <div class="col-4">
+                <input type="date" name="date_naissance" id="date_naissance" value="<?= $data_eleve ? $data_eleve->eleve_date_naissance :'' ?>" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
+            </div>
+            <div class="col-2">
+              <label for="adresse">adresse</label>
+            </div>
+            <div class="col-4">
+              <input type="text" name="adresse" value="<?= $data_eleve ? $data_eleve->eleve_adresse :'' ?>" id="adresse" class="form-control form-control-sm " placeholder="adresse">
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-6">
               <div class="row">
-                <div class="col-sm-3">
-                  <label for="matricule">Matricule  <strong class="text-danger">*</strong></label>
+                <div class="col-4">
+                  <label for="matricule">matricule  <strong class="text-danger">*</strong></label>
                 </div>
-                <div class="col-sm-3">
-                  <input type="text" name="matricule" value="<?= $data_eleve ? $data_eleve->eleve_matricule :'' ?>" id="matricule" class="form-control form-control-sm " placeholder="Matricule">
+                <div class="col-3">
+                  <input type="text" name="matricule" value="<?= $data_eleve ? $data_eleve->eleve_matricule :'' ?>" id="matricule" class="form-control form-control-sm " placeholder="matricule">
                   <div class="text-danger" id="error_matricule"></div>
                 </div>
-                <div class="col-sm-2">
-                  <label for="nc">NC  <strong class="text-danger">*</strong></label>
+                <div class="col-2">
+                  <label for="nc">nc  <strong class="text-danger">*</strong></label>
                 </div>
-                <div class="col-sm-4">
-                  <input type="text" name="nc" value="<?= $data_eleve ? $data_eleve->eleve_nc :'' ?>" id="nc" class="form-control form-control-sm " placeholder="NC">
+                <div class="col-3">
+                  <input type="text" name="nc" value="<?= $data_eleve ? $data_eleve->eleve_nc :'' ?>" id="nc" class="form-control form-control-sm " placeholder="nc">
                   <div class="text-danger" id="error_nc"></div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-1">
-              <label for="numero">Numéro  <strong class="text-danger">*</strong></label>
+            <div class="col-2">
+              <label for="numero">numéro  <strong class="text-danger">*</strong></label>
             </div>
-            <div class="col-sm-3">
-              <input type="number" name="numero" value="<?= $data_eleve ? $data_eleve->eleve_numero :'' ?>" id="numero" class="form-control form-control-sm " placeholder="Numéro">
+            <div class="col-4">
+              <input type="number" name="numero" value="<?= $data_eleve ? $data_eleve->eleve_numero :'' ?>" id="numero" class="form-control form-control-sm " placeholder="numéro">
               <div class="text-danger" id="error_numero"></div>
             </div>
           </div>
-          <div class="row form-group">
-            <div class="col-sm-8">
-              <label>Liste des classes:</label>
-            </div>
-          </div>
+          <h5>liste des classes:</h5>
 
-          <div class="row form-group">
-            <div class="col-sm-8">
+            <div class="row form-group">
               <table class="table table-sm table-striped" id="table_classe">
                 <thead>
                   <tr class="text-sm">
-                    <th>Niveau</th>
-                    <th>Catégorie</th>
-                    <th>Mention</th>
-                    <th>Session</th>
+                    <th>niveau</th>
+                    <th>catégorie</th>
+                    <th>mention</th>
+                    <th>session</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -180,7 +158,7 @@
                         <td><?=$c['categorie']?></td>
                         <td><?=$c['mention']?></td>
                         <td><?=$c['session']?></td>
-                        <td d-flex>
+                        <td class="d-flex">
                           <a href="javascript:void(0)" data-id="<?=$c['id']?>" class="fa text-danger del_classe" onclick="del_classe($(this).attr('data-id'))">&#xf00d;</a>
                         </td>
                       </tr>
@@ -189,7 +167,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
         </main>
       </form>
     </div>
@@ -202,7 +179,6 @@
       DATA_CLASSE = JSON.parse('<?=$classe_all_data?>');
     <?php endif ?>
   })
-
   <?php
     if (array_key_exists('error', $_SESSION)) {
       $error = $_SESSION['error'];
@@ -211,7 +187,6 @@
       }
     }
   ?>
-
   $('#check_classe').click(() => {
     let classe = $('#classe option:selected').text();
     let categorie = $('#categorie').val();
@@ -247,7 +222,7 @@
       if (el.id == row) {
         e = i;
       }
-    })
+    });
     DATA_CLASSE.splice(e, 1);
     $(`#table_classe #classe_${row}`).remove();
     console.log(DATA_CLASSE);
@@ -258,7 +233,7 @@
       $("#table_classe").addClass('table-warning');
       setTimeout(() => {
         $("#table_classe").removeClass('table-warning');
-      }, 4000)
+      }, 4000);
       const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -269,12 +244,12 @@
           toast.addEventListener('mouseenter', Swal.stopTimer)
           toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-      })
+      });
 
       Toast.fire({
         icon: 'warning',
         title: 'Veuillez ajouter une classe'
-      })
+      });
       return;
     }
     let classe = JSON.stringify(DATA_CLASSE);

@@ -3,14 +3,16 @@
 		SELECT 
 			p.*,
 			eleves.*,
-			t.param_id, t.param_description AS type,
+			t.param_id, t.param_description AS type, t.param_valeur,
 			m.param_id, m.param_description AS mode,
-			s.param_description AS status
+			s.param_description AS status,
+			r.recu_nom AS paiement_numero_recu
 		FROM paiements AS p
 		LEFT JOIN eleves ON eleves.eleve_id=p.paiement_eleve_fk
 		JOIN param_divers AS t ON t.param_id=p.paiement_type_paiement_param_fk
 		JOIN param_divers AS m ON m.param_id=p.paiement_mode_paiement_param_fk
 		JOIN param_divers AS s ON s.param_id=p.paiement_status_param_fk
+		JOIN recus AS r ON p.paiement_recu_fk=r.recu_id
 		WHERE 1
 	";
 	/***********************************************/
@@ -37,12 +39,27 @@
 					break;
 			}
 		}
-
-		if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != -1) {
+		if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != 'TOUT') {
 			$type_paiement = $_GET['type_paiement'];
-			$query .= " AND p.paiement_type_paiement_param_fk=$type_paiement";
+			$simple = $_GET['type_paiement_simple'];
+			$divers = $_GET['type_paiement_divers'];
+			switch ($type_paiement) {
+        case 'SIMPLE':
+          if ($simple == 'TOUT') {
+            $query .= " AND t.param_valeur LIKE 's-%'";
+          } else {
+            $query .= " AND p.paiement_type_paiement_param_fk={$simple}";
+          }
+          break;
+        case 'DIVERS':
+          if ($divers == 'TOUT') {
+            $query .= " AND t.param_valeur LIKE 'd-%'";
+          } else {
+            $query .= " AND p.paiement_type_paiement_param_fk={$divers}";
+          }
+          break;
+      }
 		}
-
 		if (isset($_GET['date_du']) && isset($_GET['date_au'])) {
 			$date_du = $_GET['date_du'];
 			$date_au = $_GET['date_au'];
@@ -50,11 +67,9 @@
 				$query .= " AND p.paiement_date_depot BETWEEN '$date_du' AND '$date_au'";
 			}
 		}
-
 		if (isset($_GET['paiement_id'])) {
 			$query .= " AND p.paiement_id=". $_GET['paiement_id'];
 		}
-
 		$data = $db->get_query($query);
 		foreach ($data as $i => $paiement) {
 			$q = "
@@ -78,22 +93,7 @@
 		echo ('{"data":'. json_encode($data) .'}');
 		exit();
 	}
-	/***********************************************/
-	//				AJAX REQUEST
-	/***********************************************/
-	if (isset($_GET['q'])) {
-		require_once '../config/default.php';
-		require_once '../config/database.php';
-		require_once '../helpers/auth.php';
-		is_login($base_url);
-		$db = new database();
-		$q = $_GET['q'];
-		$data = [];
-		header('Content-type: application/json');
-		echo json_encode($data);
-		exit();
-	}
-
+	
 	/***********************************************/
 	//				EXPORT EN PDF
 	/***********************************************/
@@ -104,7 +104,7 @@
 		require_once '../vendor/autoload.php';
 		is_login($base_url);
 		$db = new database();
-		$titre = "PAIEMENTS";
+		$titre = $_GET['titre'];
 		
 		if (isset($_GET['type_recherche'])) {
 			$type_recherche = $_GET['type_recherche'];
@@ -120,33 +120,36 @@
 					break;
 			}
 		}
-
-		if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != -1) {
-			$tp = $_GET['type_paiement'];
-			$query .= " AND p.paiement_type_paiement_param_fk=$tp";
-			$titre = $db->get_query("SELECT param_description FROM param_divers WHERE param_id=$tp")[0]['param_description'];
-		}
-
-		if (isset($_GET['date_du']) && isset($_GET['date_au'])) {
+    
+    if (isset($_GET['type_paiement']) && $_GET['type_paiement'] != 'TOUT') {
+      $type_paiement = $_GET['type_paiement'];
+      $simple = $_GET['type_paiement_simple'];
+      $divers = $_GET['type_paiement_divers'];
+      switch ($type_paiement) {
+        case 'SIMPLE':
+          if ($simple == 'TOUT') {
+            $query .= " AND t.param_valeur LIKE 's-%'";
+          } else {
+            $query .= " AND p.paiement_type_paiement_param_fk={$simple}";
+          }
+          break;
+        case 'DIVERS':
+          if ($divers == 'TOUT') {
+            $query .= " AND t.param_valeur LIKE 'd-%'";
+          } else {
+            $query .= " AND p.paiement_type_paiement_param_fk={$divers}";
+          }
+          break;
+      }
+    }
+    
+    if (isset($_GET['date_du']) && isset($_GET['date_au'])) {
 			$date_du = $_GET['date_du'];
 			$date_au = $_GET['date_au'];
 			if ($date_du != '' || $date_au != '') {
 				$query .= " AND p.paiement_date_depot BETWEEN '$date_du' AND '$date_au'";
 			}
 		}
-
-
-		/*		if (isset($_GET['type_recherche']) && isset($_GET['param'])) {
-			switch ($_GET['type_recherche']) {
-				case 'PAIEMENT':
-					$query = "SELECT e.* FROM paiements AS e INNER JOIN paiements AS c ON e.paiement_id=c.type_paiement_fk INNER JOIN param_divers AS p ON p.param_id=c.paiement_param_fk WHERE c.paiement_param_fk=" . $_GET['param'];
-					$c = $db->get_query("SELECT param_description AS paiements FROM param_divers WHERE param_id=" . $_GET['param'])[0]['paiements'];
-					$titre = "PAIEMENT EN CLASSE $c";
-					break;
-
-			}
-		}*/
-	
 
 		$data = $db->get_query($query);
 
@@ -169,7 +172,7 @@
 		$content = "";
 		$mt_total_total = 0;
 		$mt_total_payer = 0;
-		$monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+		$monthNames = getAllMounth();
 		$header = "
 			<!DOCTYPE html>
 				<html>
@@ -199,12 +202,12 @@
 					<body>
 						<div style='display=flex;'>
 							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
-							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+							<div align='center' style='font-size:20px;'>$titre</div>
 							<h4>Cellule de suivie d'Evaluation</h4>
 						</div>
 						<table style='width:100%'>
 							<tr>
-								<th>Date Réçu</th>
+								<th>Date Reçu</th>
 								<th>Total</th>
 								<th>Payer</th>
 								<th>Reste</th>
@@ -227,7 +230,7 @@
 				$classe .= "$cl $categorie $mention ($session)<br>";
 			}
 			$date_recu = strftime("%d/%m/%Y", strtotime($value['paiement_date_recu']));
-			$date_depot = strtotime($value['paiement_date_depot']) ? strftime("%d/%m/ %Y", strtotime($value['paiement_date_depot'])) : '-';
+			$date_depot = strtotime($value['paiement_date_depot']) ? strftime("%d/%m/%Y", strtotime($value['paiement_date_depot'])) : '-';
 			$mt_total_total += $value['paiement_total'];
 			$mt_total_payer += $value['paiement_montant'];
 			$reste = $mt_total_total - $mt_total_payer;
@@ -241,8 +244,8 @@
 					<td>" . @$value['type'] . "</td>
 					<td>" . @$value['mode'] . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
-					<td>" . $value['eleve_nom'] . " ". $value['eleve_prenom'] ."</td>
-					<td>". @$value['paiement_mois'] ."</td>
+					<td>" . $value['eleve_nom'] . " " . $value['eleve_prenom'] . "</td>
+					<td>" . @$value['paiement_mois'] . "</td>
 					<td>$classe </td>
 					<td>$statut</td>
 				</tr>
@@ -276,15 +279,40 @@
 		</body>
 		</html>";
 		$html = $header . $content . $footer;
-		$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
-		$mpdf->WriteHTML($html);
-		$mpdf->Output('liste_paiement.pdf', 'I');
-		$mpdf->Close();
+		try {
+      $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
+      $mpdf->WriteHTML($html);
+      $mpdf->Output('liste_paiement.pdf', 'I');
+      $mpdf->Close();
+    } catch (\Throwable $e) {
+		  die($e);
+    }
 		exit();
 	}
 
 	/***********************************************/
-	//		AJAX SUPRESSION DU PAIEMENT
+	//		AJAX ANNULATION RECU
+	/***********************************************/
+  if (isset($_GET['typeRecu'])) {
+    require_once '../config/default.php';
+    require_once '../config/database.php';
+    require_once '../helpers/auth.php';
+    is_login($base_url);
+    $db = new database();
+    $data = [
+      'recu_id' => '',
+      'recu_nom' => $_GET['typeRecu'],
+      'recu_type' => 'ANNULER'
+    ];
+    header('Content-type: application/json');
+    if ($db->insert('recus', $data)) {
+      echo ('{ "status": "success" }');
+    }
+    exit();
+  }
+  
+	/***********************************************/
+	//		AJAX SUPPRESSION DU PAIEMENT
 	/***********************************************/
 	if (isset($_GET['delete'])) {
 		require_once '../config/default.php';
@@ -304,15 +332,11 @@
 	}
 
 	/***********************************************/
-	//				ACTION PAR DEFAUT
+	//				ACTION PAR DÉFAUT
 	/***********************************************/	
-	//		CHECK IF USER IS LOG IN
 	require_once '../../config/default.php';
-  	require_once '../../helpers/auth.php';
-	/**********************************/
-	//		CHECK IF USER IS LOG IN
+	require_once '../../helpers/auth.php';
 	is_login($base_url);
-	/**********************************/
 	require_once '../../config/database.php';
 
 	$page_title = "Paiements";
@@ -323,22 +347,62 @@
 		$data_paiement = (object) $db->get_query( $query . ' AND paiement_id=' . $_GET['id'])[0];
 	}
 
-	$all_eleves = $db->get_query("SELECT eleve_id, eleve_nom, eleve_prenom FROM eleves");
-	$all_types = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='type_paiement'"); 
+	$all_eleves = $db->get_query("SELECT eleve_id, eleve_nom, eleve_prenom, eleve_nc FROM eleves");
+	$all_types_simple = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='type_paiement' AND param_valeur LIKE 's-%'");
+	$all_types_divers = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='type_paiement' AND param_valeur LIKE 'd-%'");
 	$all_modes = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='mode_paiement'");
 	$all_status = $db->get_query("SELECT * FROM param_divers WHERE param_table='status_paiement'");
 	$status_complet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_complet'")[0]['param_id'];
 	$status_dpcomplet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_dpcomplet'")[0]['param_id'];
 	$all_paiement_par = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='paiement_par'");
 	$paiement_tranche_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='tranche'")[0]['param_id'];
-	$last_recu = $db->get_query("SELECT MAX(p.paiement_id), p.paiement_numero_recu AS last_recu FROM paiements AS p")[0]['last_recu'];
-
-	// AU SUBMIT DU FORMULAIRE
+  $last_recu = $db->get_query("SELECT MAX(r.recu_date_ajout), r.recu_nom AS last_recu FROM recus AS r")[0]['last_recu'];
+  
+  /* Generation des reçus oublier */
+  $all_recu = $db->get_query("SELECT * FROM recus");
+  $prefixs = [];
+  $recu = [];
+  $recu_oublier = [];
+  foreach ($all_recu as $v) {
+    $r = explode('/', $v['recu_nom']);
+    $prefix = $r[0];
+    $value = $r[1];
+    if (!in_array($prefix, $prefixs)) {
+      array_push($prefixs, $prefix);
+    }
+  }
+  foreach ($prefixs as $prefix) {
+    $recu[$prefix] = [];
+  }
+  foreach ($all_recu as $v) {
+    $r = explode('/', $v['recu_nom']);
+    $prefix = $r[0];
+    $value = $r[1];
+    if (!in_array($value, $recu[$prefix])) {
+      array_push($recu[$prefix], $value);
+    }
+  }
+  foreach ($prefixs as $prefix) {
+    $d = $recu[$prefix];
+    $max = max($d);
+    $min = min($d);
+    for ($i=$min; $i<=$max; $i++) {
+      if (!in_array($i, $recu[$prefix])) {
+        $v = "{$prefix}/{$i}";
+        array_push($recu_oublier, $v);
+      }
+    }
+  }
+  /* end reçus oublier */
+  
+  // AU SUBMIT DU FORMULAIRE
 	unset($_SESSION['error']);
 	if (isset($_POST['submit_paiement'])) {
 		$matricule = array_key_exists('matricule', $_POST) ? $_POST['matricule'] : null;
 		$montant = array_key_exists('montant', $_POST) ? $_POST['montant'] : null;
 		$type_paiement = array_key_exists('type_paiement', $_POST) ? $_POST['type_paiement'] : null;
+		$type_paiement_simple = array_key_exists('type_paiement_simple', $_POST) ? $_POST['type_paiement_simple'] : null;
+		$type_paiement_divers = array_key_exists('type_paiement_divers', $_POST) ? $_POST['type_paiement_divers'] : null;
 		$mode_paiement = array_key_exists('mode_paiement', $_POST) ? $_POST['mode_paiement'] : null;
 		$description = array_key_exists('commentaire', $_POST) ? $_POST['commentaire'] : null;
 		$montant_total = array_key_exists('montant_total', $_POST) ? $_POST['montant_total'] : null;
@@ -347,25 +411,22 @@
 		$status_paiement = array_key_exists('status_paiement', $_POST) ? $_POST['status_paiement'] : null;
 		$numero_recu = array_key_exists('numero_recu', $_POST) ? $_POST['numero_recu'] : null;
 		$date_recu = array_key_exists('date_recu', $_POST) ? $_POST['date_recu'] : null;
-		$nom_eleve = array_key_exists('nom_eleve', $_POST) ? $_POST['nom_eleve'] : null;
+		$nc = array_key_exists('nc', $_POST) ? $_POST['nc'] : null;
 		$num_tranche = array_key_exists('num_tranche', $_POST) ? $_POST['num_tranche'] : null;
 		$mois = array_key_exists('mois', $_POST) ? $_POST['mois'] : null;
 		$eleve_id = '';
 
 		foreach ($all_eleves as $i => $eleve) {
-			if ($nom_eleve == $eleve['eleve_nom']." ". $eleve['eleve_prenom']) {
+			if ($nc == $eleve['eleve_nc']) {
 				$eleve_id = $eleve['eleve_id'];
 			}
 		}
-
 		if ($date_recu == '') {
 			$_SESSION['error']['error_date_recu'] = "Ce champs est obligatoire.";
 		}
-
 		if ($eleve_id == '') {
-			$_SESSION['error']['error_nom_eleve'] = "Cette élève n'existe pas.";
+			$_SESSION['error']['error_nc'] = "Cette élève n'existe pas.";
 		}
-
 		if ($numero_recu == '') {
 			$_SESSION['error']['error_numero_recu'] = "Ce champs est obligatoire.";
 		}
@@ -381,6 +442,14 @@
 				$_SESSION['error']['error_montant_payer'] = "Veuillez insérer la montant du paiement.";
 			}
 		}
+		switch ($type_paiement) {
+      case 'SIMPLE':
+		    $type_paiement = $type_paiement_simple;
+		    break;
+      case 'DIVERS':
+        $type_paiement = $type_paiement_divers;
+        break;
+    }
 
 		$data = [
 			'paiement_id' => '',
@@ -391,7 +460,6 @@
 			'paiement_eleve_fk' => $eleve_id,
 			'paiement_status_param_fk' => $status_paiement,
 			'paiement_par_param_fk' => $status_paiement,
-			'paiement_numero_recu' => $numero_recu,
 			'paiement_date_recu' => $date_recu,
 			'paiement_commentaire' => $description,
 			'paiement_type_paiement_param_fk' => $type_paiement,
@@ -412,6 +480,13 @@
 			// CREATION
 			if (empty($_POST['id'])) {
 				$data['paiement_date_depot'] = date("Y-m-d H:i:s");
+				$data_recu = [
+        'recu_id' => '',
+				  'recu_nom' => $numero_recu,
+          'recu_date_ajout' => date("Y-m-d H:i:s")
+        ];
+				$db->insert('recus', $data_recu);
+				$data['paiement_recu_fk'] = $db->lastInsertId();
 				if ($db->insert('paiements', $data)) {
 					add_history("Création paiement de ". $data['paiement_montant']);
 					header('location: ./');

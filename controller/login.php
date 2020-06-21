@@ -22,7 +22,8 @@
 			if (sizeof($data) > 0) {
 				$_SESSION['uid'] = $data[0]['utilisateur_id'];
 				$_SESSION['pseudo'] = $data[0]['utilisateur_pseudo'];
-				unset($_SESSION['error_loggin']);
+				$_SESSION['created_at'] = time();
+                unset($_SESSION['error_loggin']);
 				header('location: ../../');
 			} else {
 				$_SESSION['error_loggin'] = "Pseudo ou mot de passe invalide!";

@@ -1,3 +1,22 @@
+._16px {
+  font-size: 16px !important;
+}
+._14px {
+  font-size: 14px !important;
+}
+
+.transition {
+  transition-duration: 1s;
+}
+
+.toolbtn {
+  align-items: center;
+}
+
+.nav-sidebar>.nav-item .sm-icon {
+    font-size: 14px !important;
+}
+
 .nav-sidebar .nav-treeview {
     background-color: #282b2f !important;
 }
@@ -30,6 +49,7 @@
 .form-group label {
     font-weight: 500 !important;
     font-size: 14px !important;
+    white-space: nowrap;
 }
 
 .form-control-perso:focus {
@@ -88,5 +108,5 @@ table#JodataTable {
 }
 
 .swal2-popup {
-    font-size: 0.8rem !important;
+    font-size: .9rem !important;
 }

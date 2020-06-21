@@ -6,12 +6,11 @@
       Aceem Madagascar
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2020 <a href="#"></a>.</strong>
+    <strong>Copyright &copy; 2020</strong>
   </footer>
 </div>
 <!-- ./wrapper -->
 <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 </html>
-
 <!-- ©2020 -->

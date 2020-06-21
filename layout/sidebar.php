@@ -44,7 +44,7 @@
               <?php if (is_privileged('utilisateurs')): ?>
               <li class="nav-item">
                 <a href="../../pages/utilisateurs" class="nav-link <?=$page_title=='Utilisateurs'?'active':''?>">
-                  <i class="fa fa-user nav-icon"></i>
+                  <i class="fa fa-user sm-icon nav-icon"></i>
                   <p>Utilisateurs</p>
                 </a>
               </li>
@@ -52,7 +52,7 @@
               <?php if (is_privileged('groupes')): ?>
               <li class="nav-item">
                 <a href="../../pages/groupes" class="nav-link <?=$page_title=='Groupes'?'active':''?>">
-                  <i class="fa fa-users nav-icon"></i>
+                  <i class="fa fa-users sm-icon nav-icon"></i>
                   <p>Groupes</p>
                 </a>
               </li>
@@ -60,7 +60,7 @@
               <?php if (is_privileged('historiques')): ?>
               <li class="nav-item">
                 <a href="../../pages/historiques" class="nav-link <?=$page_title=='Historiques'?'active':''?>">
-                  <i class="fa fa-list nav-icon"></i>
+                  <i class="fa fa-list sm-icon nav-icon"></i>
                   <p>Historiques</p>
                 </a>
               </li>

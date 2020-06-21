@@ -1,8 +1,5 @@
 <?php
-	$query = "
-		SELECT e.* FROM eleves AS e 
-		INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk
-	";
+	$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk";
 	/***********************************************/
 	//		AJAX LISTE DE TOUT LES ELEVES
 	/***********************************************/
@@ -40,8 +37,17 @@
 			$query .= " AND c.classe_mention_param_fk=" . $_GET['mention'];
 		}
 		if (isset($_GET['nc']) && $_GET['nc'] != '') {
-			$query .= " AND e.eleve_nc='" . $_GET['nc'] . "%'";
+			$query .= " AND e.eleve_nc LIKE '" . $_GET['nc'] . "%'";
 		}
+		if (isset($_GET['typeEleve'])) {
+		  if ($_GET['typeEleve'] != 'ANCIEN') {
+        $query .= " AND e.eleve_date_limite > NOW()";
+      } else if ($_GET['typeEleve'] != 'RECENT') {
+        $query .= " AND e.eleve_date_limite < CURRENT_DATE()";
+      }
+    } else {
+      $query .= " AND e.eleve_date_limite > NOW()";
+    }
 
 		$query = str_replace('__JOINTURE__', $join, $query);
 		$data = $db->get_query($query);
@@ -64,9 +70,50 @@
 		echo ('{"data":'. json_encode($data) .'}');
 		exit();
 	}
-
-	
-	/***********************************************/
+  
+  /***********************************************/
+  //				GET ELEVE BY
+  /***********************************************/
+  if (isset($_GET['getOne'])) {
+    require_once '../config/default.php';
+    require_once '../config/database.php';
+    require_once '../helpers/auth.php';
+    is_login($base_url);
+    $db = new database();
+    
+    $query .= " WHERE 1 ";
+    $join = '';
+    
+    if (isset($_GET['nc']) && $_GET['nc'] != '') {
+      $query .= " AND e.eleve_nc='" . $_GET['nc'] . "'";
+    }
+    $data = $db->get_query($query);
+    header('Content-type: application/json');
+    if (sizeof($data) == 1) {
+      $data = $data[0];
+      $q = "
+      SELECT  classes.classe_categorie AS categorie,
+          c.param_description AS classe,
+          m.param_description AS mention,
+          s.param_description AS session
+      FROM classes
+      LEFT JOIN param_divers AS c ON classes.classe_param_fk=c.param_id
+      LEFT JOIN param_divers AS m ON classes.classe_mention_param_fk=m.param_id
+      LEFT JOIN param_divers AS s ON classes.classe_session_param_fk=s.param_id
+      WHERE classes.classe_eleve_fk={$data['eleve_id']}
+    ";
+      $classe = $db->get_query($q);
+      $reste = $db->get_query("SELECT (SUM(paiement_total) - SUM(paiement_montant)) AS reste FROM paiements WHERE paiement_eleve_fk = {$data['eleve_id']}")[0]['reste'];
+      $data['classe'] = $classe;
+      $data['reste'] = $reste;
+      echo json_encode($data);
+    } else {
+      echo 'null';
+    }
+    exit();
+  }
+  
+  /***********************************************/
 	//				EXPORT EN PDF
 	/***********************************************/
 	if (isset($_GET['pdf']) && $_GET['pdf'] == 0) {
@@ -149,6 +196,7 @@
 								background-color: #f2f2f2;
 							}
 							table{
+							    width: 100%;
 								font-size: 10px;
 								border-collapse: collapse;
 							}
@@ -167,7 +215,7 @@
 							<br>
 							
 						</div>
-						<table style='width:100%'>
+						<table>
 							<tr>
 								<th>Date d'inscription</th>
 								<th>Matricule</th>
@@ -191,7 +239,7 @@
 				<tr>
 					<td>" . $date_inscription . "</td>
 					<td>" . $value['eleve_matricule'] . "</td>
-					<td>" . $value['eleve_nom'] . " " . $value['eleve_prenom'] ."</td>
+					<td>" . $value['eleve_nom'] . " " . $value['eleve_prenom'] . "</td>
 					<td>" . $value['eleve_nc'] . "</td>
 					<td>" . $classe . "</td>
 				</tr>
@@ -210,10 +258,14 @@
 		</html>";
 		$html = $header . $content . $footer;
 		// die($html);
-		$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
-		$mpdf->WriteHTML($html);
-		$mpdf->Output('liste_eleves.pdf', 'I');
-		$mpdf->Close();
+        try {
+            $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
+            $mpdf->WriteHTML($html);
+            $mpdf->Output('liste_eleves.pdf', 'I');
+            $mpdf->Close();
+        } catch (\Throwable $e) {
+            die($e);
+        }
 		exit();
 	}
 
@@ -255,9 +307,6 @@
 	is_login($base_url);
 	/**********************************/
 	require_once '../../config/database.php';
-
-	$error = '';
-
 	$page_title = "Élèves";
 	$db = new database();
 
@@ -300,36 +349,35 @@
 		$matricule = array_key_exists('matricule', $_POST) ? $_POST['matricule'] : null;
 		$numero = array_key_exists('numero', $_POST) ? $_POST['numero'] : null;
 		$date_inscription = array_key_exists('date_inscription', $_POST) ? $_POST['date_inscription'] : null;
+		$date_limite = array_key_exists('date_limite', $_POST) ? $_POST['date_limite'] : null;
 		$adresse = array_key_exists('adresse', $_POST) ? $_POST['adresse'] : null;
 		$nc = array_key_exists('nc', $_POST) ? $_POST['nc'] : null;
 		$eleve_photo = null;
-
+		
 		// UPLOAD DU PHOTO SI IL EXISTE
 		if ($_FILES["photo"]['size'] != 0) {
 			$file = $_FILES["photo"];
 			$target_file = basename($file["name"]);
-			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+			$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 			$eleve_photo = md5(time()) . '.' . $imageFileType;
 			$target_file = $upload_dir . 'eleves/' . $eleve_photo;
 			$file_size = getimagesize($file["tmp_name"]);
 			if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-				$_SESSION['error']['error_photo'] = "Veuillez inserer un fichier image JPG, JPEG, PNG ou GIF.";
+				$_SESSION['error']['error_photo'] = "Veuillez insérer un fichier image JPG, JPEG, PNG ou GIF.";
 			}
 		}
 
 		switch (null) {
 			case $nom:
-				$_SESSION['error']['error_nom'] = "Veuillez inserer un nom.";
+				$_SESSION['error']['error_nom'] = "Veuillez insérer un nom.";
 			case $prenom:
-				$_SESSION['error']['error_prenom'] = "Veuillez inserer un prénom.";
+				$_SESSION['error']['error_prenom'] = "Veuillez insérer un prénom.";
 			case $matricule:
-				$_SESSION['error']['error_matricule'] = "Veuillez inserer la matricule.";
+				$_SESSION['error']['error_matricule'] = "Veuillez insérer la matricule.";
 			case $numero:
-				$_SESSION['error']['error_numero'] = "Veuillez inserer un numero.";
-			case $adresse:
-				$_SESSION['error']['error_adresse'] = "Veuillez inserer un adresse.";
+				$_SESSION['error']['error_numero'] = "Veuillez insérer un numéro.";
 			case $nc:
-				$_SESSION['error']['error_nc'] = "Veuillez inserer le NC.";
+				$_SESSION['error']['error_nc'] = "Veuillez insérer le NC.";
 			
 			default:
 			$nc_doublon = $db->get_query("SELECT COUNT(*) AS nc_doublon FROM eleves WHERE eleve_nc='$nc'")[0]['nc_doublon'];
@@ -343,10 +391,10 @@
 					}
 			}
 			switch ('') {
-				case $date_naissance:
-					$_SESSION['error']['error_date_naissance'] = "Veuillez inserer la date de naissance.";
 				case $date_inscription:
-					$_SESSION['error']['error_date_inscription'] = "Veuillez inserer la date d'inscription.";
+					$_SESSION['error']['error_date_inscription'] = "Veuillez insérer la date d'inscription.";
+				case $date_limite:
+					$_SESSION['error']['error_date_limite'] = "Veuillez insérer la date de sorti.";
 				
 				default:
 				$data = [
@@ -360,6 +408,7 @@
 					'eleve_nc' => $nc,
 					'eleve_date_naissance' => $date_naissance,
 					'eleve_date_inscription' => $date_inscription,
+					'eleve_date_limite' => $date_limite
 				];
 				if (!array_key_exists('error', $_SESSION)) {
 					// CREATION
@@ -386,16 +435,16 @@
 					} else { // MODIFICATION
 						$data['eleve_id'] = $_POST['id'];
 						$last_picture = $_POST['last_picture'];
-						if ($doublon > 1 ) {
+						if ($nc_doublon > 1 ) {
 							$_SESSION['error']['error_matricule'] = "Ce numéro matricule existe déjà.";
 							$data_eleve = (object) $data;
 						} else {
 							$f = $upload_dir . 'eleves/' . $last_picture;
 							if (file_exists($f)) {
-								unlink($f); // SUPRESSION DE L'ANCIEN PHOTO
+								unlink($f); // SUPPRESSION DE L'ANCIEN PHOTO
 							}
 							if ($eleve_photo) {
-								move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FUCHIER
+								move_uploaded_file($file["tmp_name"], $target_file); // UPLOAD DU FICHIER
 							}
 							$db->delete('classes', ['classe_eleve_fk' => $data['eleve_id']]);
 							foreach ($classe_data as $i => $classe) {
