@@ -1,7 +1,7 @@
 <?php
 	$query = "SELECT e.* FROM eleves AS e INNER JOIN classes AS c ON e.eleve_id=c.classe_eleve_fk";
 	/***********************************************/
-	//		AJAX LISTE DE TOUT LES ELEVES
+	//				AJAX LISTE DE TOUT LES ELEVES
 	/***********************************************/
 	if (isset($_GET['list']) && $_GET['list'] == 0) {
 		require_once '../config/default.php';
@@ -72,7 +72,7 @@
 	}
   
   /***********************************************/
-  //				GET ELEVE BY
+  //								GET ELEVE BY
   /***********************************************/
   if (isset($_GET['getOne'])) {
     require_once '../config/default.php';
@@ -114,16 +114,16 @@
   }
   
   /***********************************************/
-	//				EXPORT EN PDF
+	//									EXPORT EN PDF
 	/***********************************************/
 	if (isset($_GET['pdf']) && $_GET['pdf'] == 0) {
 		require_once '../config/default.php';
 		require_once '../config/database.php';
 		require_once '../helpers/auth.php';
 		require_once '../vendor/autoload.php';
-		$titre = "ELEVES";
 		is_login($base_url);
 		$db = new database();
+		$titre = isset($_GET['titre'])?$_GET['titre']:'Listes des élèves';
 		$query .= " __JOINTURE__ ";
 		if (isset($_GET['typeSearch'])) {
 			switch ($_GET['typeSearch']) {
@@ -183,7 +183,7 @@
 				<html>
 					<head>
 						<meta charset='utf-8'>
-						<title>LISTE DES $titre</title>
+						<title>$titre</title>
 						<style>
 							th {
 								background-color: rgba(153, 153, 153, 0.6);
@@ -208,7 +208,7 @@
 					<body>
 						<div style='display=flex;'>
 							<img style='float:left;' src='../dist/img/aceem.png' width='100' height='100'>
-							<div align='center' style='font-size:20px;'>LISTE DES $titre</div>
+							<div align='center' style='font-size:20px;'>$titre</div>
 							<h4>Cellule de suivie d'Evaluation</h4>
 							Total des " . strtolower($titre) . " : " . sizeof($data) . "
 							<br>
@@ -271,7 +271,7 @@
 
 
 	/***********************************************/
-	//		AJAX SUPPRESSION D'UN ELEVE
+	//					AJAX SUPPRESSION D'UN ELEVE
 	/***********************************************/
 	if (isset($_GET['delete'])) {
 		require_once '../config/default.php';
@@ -297,15 +297,11 @@
 	}
 
 	/***********************************************/
-	//				ACTION PAR DEFAUT
+	//							ACTION PAR DEFAUT
 	/***********************************************/
-	//		CHECK IF USER IS LOG IN
 	require_once '../../config/default.php';
-  	require_once '../../helpers/auth.php';
-	/**********************************/
-	//		CHECK IF USER IS LOG IN
+  require_once '../../helpers/auth.php';
 	is_login($base_url);
-	/**********************************/
 	require_once '../../config/database.php';
 	$page_title = "Élèves";
 	$db = new database();

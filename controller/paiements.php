@@ -356,7 +356,7 @@
 	$status_dpcomplet_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='paiement_dpcomplet'")[0]['param_id'];
 	$all_paiement_par = $db->get_query("SELECT param_id, param_description FROM param_divers WHERE param_table='paiement_par'");
 	$paiement_tranche_id = $db->get_query("SELECT param_id FROM param_divers WHERE param_sigle='tranche'")[0]['param_id'];
-  $last_recu = $db->get_query("SELECT MAX(r.recu_date_ajout), r.recu_nom AS last_recu FROM recus AS r")[0]['last_recu'];
+  $last_recu = $db->get_query("SELECT r.recu_nom AS last_recu FROM recus AS r ORDER BY r.recu_id DESC LIMIT 1")[0]['last_recu'];
   
   /* Generation des reçus oublier */
   $all_recu = $db->get_query("SELECT * FROM recus");

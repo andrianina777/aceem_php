@@ -145,6 +145,24 @@
   $(document).ready(function() {
     init_table();
   });
+  
+  $('#btn_print').click(() => {
+    let {classe, mention, session, nc, typeSearch, typeEleve} = getSearchVal();
+    Swal.fire({
+      title: 'Titre de la liste',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonText: 'Imprimer',
+      cancelButtonText: 'Annuler',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Champs obligatoire!'
+        } else {
+          window.open(`<?= $base_url ?>/controller/eleves.php?pdf=0&titre=${value}&typeSearch=${typeSearch}&classe=${classe}&mention=${mention}&session=${session}&nc=${nc}&typeEleve=${typeEleve}`)
+        }
+      }
+    });
+  });
 
   $('#toggleFilter').click((e) => {
     const c = e.target.innerText;
@@ -166,11 +184,6 @@
     let {classe, mention, session, nc, typeSearch, typeEleve} = getSearchVal();
     table.destroy();
     init_table(`<?= $base_url ?>/controller/eleves.php?list=0&typeSearch=${typeSearch}&classe=${classe}&mention=${mention}&session=${session}&nc=${nc}&typeEleve=${typeEleve}`)
-  });
-  
-  $('#btn_print').click(() => {
-    let {classe, mention, session, nc, typeSearch, typeEleve} = getSearchVal();
-    window.open(`<?= $base_url ?>/controller/eleves.php?pdf=0&typeSearch=${typeSearch}&classe=${classe}&mention=${mention}&session=${session}&nc=${nc}&typeEleve=${typeEleve}`)
   });
 
   $('#JoPaginate').change(() => {

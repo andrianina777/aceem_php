@@ -189,6 +189,8 @@
       title: 'Titre de la liste',
       input: 'text',
       showCancelButton: true,
+      confirmButtonText: 'Imprimer',
+      cancelButtonText: 'Annuler',
       inputValidator: (value) => {
         if (!value) {
           return 'Champs obligatoire!'
